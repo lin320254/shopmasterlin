@@ -46,9 +46,9 @@ export function Header({
   };
 
   return (
-    <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E7DFD7]">
+    <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EBDADA]">
       {announcement && (
-        <div className="hidden sm:block bg-[#4B3427] text-[#FBF8F5] text-xs py-1.5 px-4 text-center truncate">
+        <div className="block bg-[#6B1D24] text-[#FFFFFF] text-[11px] sm:text-xs py-1.5 px-4 text-center truncate">
           {announcement}
         </div>
       )}
@@ -58,13 +58,13 @@ export function Header({
         <button
           type="button"
           onClick={() => handleNavClick(() => onNavigate('shop'))}
-          className="font-display text-lg sm:text-xl font-bold tracking-tight text-[#1E1612] whitespace-nowrap shrink-0 cursor-pointer hover:text-[#5C4030] transition-colors"
+          className="font-display text-lg sm:text-xl font-bold tracking-tight text-[#241113] whitespace-nowrap shrink-0 cursor-pointer hover:text-[#7A2229] transition-colors"
         >
           {settings.storeName}
         </button>
 
         {/* Zone 2: 4 Clean Single-Line Nav Links */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-[#63554C]">
+        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-[#6A4B4E]">
           <button
             type="button"
             onClick={() => {
@@ -73,8 +73,8 @@ export function Header({
             }}
             className={`whitespace-nowrap shrink-0 cursor-pointer pb-0.5 transition-colors ${
               activePage === 'shop'
-                ? 'text-[#1E1612] border-b border-[#5C4030]'
-                : 'hover:text-[#1E1612]'
+                ? 'text-[#241113] border-b border-[#7A2229]'
+                : 'hover:text-[#241113]'
             }`}
           >
             {t.navShop}
@@ -86,7 +86,7 @@ export function Header({
               onNavigate('shop');
               onScrollToSection('promotions-section');
             }}
-            className="whitespace-nowrap shrink-0 cursor-pointer pb-0.5 hover:text-[#1E1612] transition-colors"
+            className="whitespace-nowrap shrink-0 cursor-pointer pb-0.5 hover:text-[#241113] transition-colors"
           >
             {t.navPromos}
           </button>
@@ -96,8 +96,8 @@ export function Header({
             onClick={() => onNavigate('orders')}
             className={`whitespace-nowrap shrink-0 cursor-pointer pb-0.5 transition-colors ${
               activePage === 'orders'
-                ? 'text-[#1E1612] border-b border-[#5C4030]'
-                : 'hover:text-[#1E1612]'
+                ? 'text-[#241113] border-b border-[#7A2229]'
+                : 'hover:text-[#241113]'
             }`}
           >
             {t.navOrders}
@@ -108,10 +108,10 @@ export function Header({
             onClick={() => onNavigate('admin')}
             className={`whitespace-nowrap shrink-0 cursor-pointer pb-0.5 transition-colors ${
               activePage === 'admin'
-                ? 'text-[#5C4030] font-semibold border-b border-[#5C4030]'
+                ? 'text-[#7A2229] font-semibold border-b border-[#7A2229]'
                 : isAdmin
-                  ? 'text-[#5C4030] hover:text-[#38251B]'
-                  : 'hover:text-[#1E1612]'
+                  ? 'text-[#7A2229] hover:text-[#52141A]'
+                  : 'hover:text-[#241113]'
             }`}
           >
             {t.navAdmin}
@@ -124,7 +124,7 @@ export function Header({
             type="button"
             onClick={onToggleLang}
             aria-label="Toggle Language"
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[#E7DFD7] text-xs font-medium text-[#4B3427] hover:bg-[#FAF8F6] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[#EBDADA] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
             <Globe className="w-3.5 h-3.5" />
             <span>{lang === 'mm' ? 'EN' : 'မြန်မာ'}</span>
@@ -135,16 +135,16 @@ export function Header({
               <button
                 type="button"
                 onClick={() => onNavigate(isAdmin ? 'admin' : 'orders')}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#1E1612] hover:bg-[#FAF8F6] transition-colors whitespace-nowrap shrink-0 cursor-pointer max-w-[140px]"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#241113] hover:bg-[#FCF8F8] transition-colors whitespace-nowrap shrink-0 cursor-pointer max-w-[140px]"
                 title={user.email || ''}
               >
-                <User className="w-3.5 h-3.5 text-[#5C4030] shrink-0" />
+                <User className="w-3.5 h-3.5 text-[#7A2229] shrink-0" />
                 <span className="truncate">{user.displayName || user.email?.split('@')[0]}</span>
               </button>
               <button
                 type="button"
                 onClick={onSignOut}
-                className="text-xs text-[#63554C] hover:text-[#1E1612] px-2 py-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                className="text-xs text-[#6A4B4E] hover:text-[#241113] px-2 py-1.5 whitespace-nowrap shrink-0 cursor-pointer"
               >
                 {t.signOut}
               </button>
@@ -153,9 +153,9 @@ export function Header({
             <button
               type="button"
               onClick={onSignIn}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D2C1B4] text-xs font-medium text-[#1E1612] hover:bg-[#FAF8F6] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D8BEBE] text-xs font-medium text-[#241113] hover:bg-[#FCF8F8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
-              <User className="w-3.5 h-3.5 text-[#5C4030]" />
+              <User className="w-3.5 h-3.5 text-[#7A2229]" />
               <span>{t.signIn}</span>
             </button>
           )}
@@ -163,7 +163,7 @@ export function Header({
           <button
             type="button"
             onClick={onOpenCart}
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#4B3427] text-white text-xs sm:text-sm font-medium hover:bg-[#38251B] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#6B1D24] text-white text-xs sm:text-sm font-medium hover:bg-[#52141A] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4" />
             <span>{t.cart}</span>
@@ -174,7 +174,7 @@ export function Header({
             type="button"
             onClick={() => setMobileMenuOpen((v) => !v)}
             aria-label="Open menu"
-            className="lg:hidden p-2 rounded-lg text-[#1E1612] hover:bg-[#FAF8F6] cursor-pointer"
+            className="lg:hidden p-2 rounded-lg text-[#241113] hover:bg-[#FCF8F8] cursor-pointer"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -183,7 +183,7 @@ export function Header({
 
       {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#E7DFD7] bg-white px-4 py-4 space-y-2">
+        <div className="lg:hidden border-t border-[#EBDADA] bg-white px-4 py-4 space-y-2">
           <button
             type="button"
             onClick={() =>
@@ -192,7 +192,7 @@ export function Header({
                 onScrollToSection('catalog-section');
               })
             }
-            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#1E1612] hover:bg-[#FAF8F6]"
+            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#241113] hover:bg-[#FCF8F8]"
           >
             {t.navShop}
           </button>
@@ -204,32 +204,32 @@ export function Header({
                 onScrollToSection('promotions-section');
               })
             }
-            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#1E1612] hover:bg-[#FAF8F6]"
+            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#241113] hover:bg-[#FCF8F8]"
           >
             {t.navPromos}
           </button>
           <button
             type="button"
             onClick={() => handleNavClick(() => onNavigate('orders'))}
-            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#1E1612] hover:bg-[#FAF8F6]"
+            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#241113] hover:bg-[#FCF8F8]"
           >
             {t.navOrders}
           </button>
           <button
             type="button"
             onClick={() => handleNavClick(() => onNavigate('admin'))}
-            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#5C4030] hover:bg-[#FAF8F6]"
+            className="w-full text-left px-3 py-2.5 rounded-xl text-sm font-medium text-[#7A2229] hover:bg-[#FCF8F8]"
           >
             {t.navAdmin}
           </button>
-          <div className="pt-2 border-t border-[#E7DFD7]">
+          <div className="pt-2 border-t border-[#EBDADA]">
             {user ? (
               <div className="flex items-center justify-between px-3 py-2">
-                <span className="text-xs text-[#63554C] truncate">{user.email}</span>
+                <span className="text-xs text-[#6A4B4E] truncate">{user.email}</span>
                 <button
                   type="button"
                   onClick={() => handleNavClick(onSignOut)}
-                  className="text-xs font-medium text-[#5C4030]"
+                  className="text-xs font-medium text-[#7A2229]"
                 >
                   {t.signOut}
                 </button>
@@ -238,7 +238,7 @@ export function Header({
               <button
                 type="button"
                 onClick={() => handleNavClick(onSignIn)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#FAF8F6] border border-[#E7DFD7] text-sm font-medium text-[#1E1612]"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-sm font-medium text-[#241113]"
               >
                 {t.signIn}
               </button>

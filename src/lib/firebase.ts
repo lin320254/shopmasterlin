@@ -68,6 +68,27 @@ export function handleFirestoreError(
   throw new Error(JSON.stringify(errInfo));
 }
 
+export function getReadableFirestoreError(
+  error: unknown,
+  operationType: OperationType,
+  path: string | null
+): string {
+  try {
+    handleFirestoreError(error, operationType, path);
+  } catch (formatted) {
+    const raw = formatted instanceof Error ? formatted.message : String(formatted);
+    try {
+      const parsed = JSON.parse(raw) as FirestoreErrorInfo;
+      if (parsed?.error) {
+        return parsed.error;
+      }
+    } catch {
+      return raw;
+    }
+  }
+  return 'Firestore operation failed.';
+}
+
 export async function testConnection(): Promise<boolean> {
   try {
     await getDocFromServer(doc(db, 'test', 'connection'));

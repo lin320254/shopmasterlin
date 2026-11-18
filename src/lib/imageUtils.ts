@@ -91,16 +91,16 @@ export function buildSampleQrDataUrl(label: string, accountNumber: string): stri
         dark = ((r * 31 + c * 17 + seed) % 7) < 3;
       }
       if (dark) {
-        cells.push(`<rect x="${20 + c * 8}" y="${20 + r * 8}" width="8" height="8" fill="#1E1612"/>`);
+        cells.push(`<rect x="${20 + c * 8}" y="${20 + r * 8}" width="8" height="8" fill="#241113"/>`);
       }
     }
   }
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="208" height="232" viewBox="0 0 208 232">
     <rect width="208" height="232" rx="12" fill="#FFFFFF"/>
-    <rect x="12" y="12" width="184" height="184" rx="8" fill="#FAF8F6" stroke="#E7DFD7" stroke-width="1"/>
+    <rect x="12" y="12" width="184" height="184" rx="8" fill="#FCF8F8" stroke="#EBDADA" stroke-width="1"/>
     ${cells.join('')}
-    <text x="104" y="214" text-anchor="middle" font-family="monospace" font-size="11" font-weight="600" fill="#5C4030">${label} · ${accountNumber}</text>
+    <text x="104" y="214" text-anchor="middle" font-family="monospace" font-size="11" font-weight="600" fill="#7A2229">${label} · ${accountNumber}</text>
   </svg>`;
 
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;

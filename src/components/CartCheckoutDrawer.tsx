@@ -15,7 +15,7 @@ import {
 import { useEffect, useState } from 'react';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { db, getReadableFirestoreError, OperationType } from '../lib/firebase';
 import { formatMmk, translations } from '../lib/i18n';
 import { compressImageFile } from '../lib/imageUtils';
 import type { CartItem, Language, PaymentMethod, Promotion } from '../types';
@@ -252,7 +252,7 @@ export function CartCheckoutDrawer({
       setPromoInput('');
       setStep('success');
     } catch (err) {
-      handleFirestoreError(err, OperationType.CREATE, `orders/${orderId}`);
+      setFormError(getReadableFirestoreError(err, OperationType.CREATE, `orders/${orderId}`));
     } finally {
       setSubmitting(false);
     }
@@ -265,18 +265,18 @@ export function CartCheckoutDrawer({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-[#1E1612]/50 backdrop-blur-xs flex justify-end"
+      className="fixed inset-0 z-50 bg-[#241113]/50 backdrop-blur-xs flex justify-end"
       onClick={resetAndClose}
     >
       <div
-        className="bg-white w-full max-w-xl h-full flex flex-col border-l border-[#E7DFD7]"
+        className="bg-white w-full max-w-xl h-full flex flex-col border-l border-[#EBDADA]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drawer Header */}
-        <div className="px-6 py-4 border-b border-[#E7DFD7] flex items-center justify-between bg-[#FAF8F6]">
+        <div className="px-6 py-4 border-b border-[#EBDADA] flex items-center justify-between bg-[#FCF8F8]">
           <div className="flex items-center gap-2.5">
-            <ShoppingBag className="w-5 h-5 text-[#5C4030]" />
-            <h2 className="font-display text-lg font-bold text-[#1E1612]">
+            <ShoppingBag className="w-5 h-5 text-[#7A2229]" />
+            <h2 className="font-display text-lg font-bold text-[#241113]">
               {step === 'cart'
                 ? `${t.cart} (${cart.reduce((s, i) => s + i.quantity, 0)})`
                 : step === 'checkout'
@@ -288,7 +288,7 @@ export function CartCheckoutDrawer({
             type="button"
             onClick={resetAndClose}
             aria-label="Close drawer"
-            className="p-2 rounded-lg text-[#63554C] hover:bg-white cursor-pointer"
+            className="p-2 rounded-lg text-[#6A4B4E] hover:bg-white cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -301,22 +301,22 @@ export function CartCheckoutDrawer({
               <div className="w-14 h-14 rounded-2xl bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-7 h-7" />
               </div>
-              <h3 className="font-display text-xl font-bold text-[#1E1612]">
+              <h3 className="font-display text-xl font-bold text-[#241113]">
                 {t.orderSubmittedTitle}
               </h3>
-              <p className="mt-2 text-sm text-[#63554C] leading-relaxed">
+              <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed">
                 {t.orderSubmittedDesc}
               </p>
 
-              <div className="mt-6 p-4 rounded-2xl bg-[#FAF8F6] border border-[#E7DFD7] text-left space-y-2 text-sm">
+              <div className="mt-6 p-4 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA] text-left space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-[#63554C]">{t.orderNumber}</span>
-                  <span className="font-mono-tabular font-semibold text-[#1E1612]">
+                  <span className="text-[#6A4B4E]">{t.orderNumber}</span>
+                  <span className="font-mono-tabular font-semibold text-[#241113]">
                     {submittedOrderNumber}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-[#63554C]">{t.statusPending}</span>
+                  <span className="text-[#6A4B4E]">{t.statusPending}</span>
                   <span className="text-[#B45309] font-medium">{t.statusPending}</span>
                 </div>
               </div>
@@ -328,14 +328,14 @@ export function CartCheckoutDrawer({
                     resetAndClose();
                     onViewOrders();
                   }}
-                  className="h-11 px-4 rounded-xl bg-[#4B3427] text-white text-sm font-medium hover:bg-[#38251B] transition-colors cursor-pointer"
+                  className="h-11 px-4 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] transition-colors cursor-pointer"
                 >
                   {t.viewMyOrders}
                 </button>
                 <button
                   type="button"
                   onClick={resetAndClose}
-                  className="h-11 px-4 rounded-xl border border-[#D2C1B4] text-sm font-medium text-[#1E1612] hover:bg-[#FAF8F6] transition-colors cursor-pointer"
+                  className="h-11 px-4 rounded-xl border border-[#D8BEBE] text-sm font-medium text-[#241113] hover:bg-[#FCF8F8] transition-colors cursor-pointer"
                 >
                   {t.backToShop}
                 </button>
@@ -343,11 +343,11 @@ export function CartCheckoutDrawer({
             </div>
           ) : cart.length === 0 ? (
             <div className="py-16 text-center">
-              <ShoppingBag className="w-10 h-10 text-[#C5B2A3] mx-auto mb-3" />
-              <h3 className="font-display text-base font-semibold text-[#1E1612]">
+              <ShoppingBag className="w-10 h-10 text-[#CCA9A9] mx-auto mb-3" />
+              <h3 className="font-display text-base font-semibold text-[#241113]">
                 {t.emptyCartTitle}
               </h3>
-              <p className="mt-1.5 text-sm text-[#63554C] max-w-xs mx-auto">{t.emptyCartDesc}</p>
+              <p className="mt-1.5 text-sm text-[#6A4B4E] max-w-xs mx-auto">{t.emptyCartDesc}</p>
             </div>
           ) : step === 'cart' ? (
             <div className="space-y-6">
@@ -356,22 +356,22 @@ export function CartCheckoutDrawer({
                 {cart.map((item) => (
                   <div
                     key={item.key}
-                    className="p-3.5 rounded-2xl border border-[#E7DFD7] bg-white flex items-center gap-3.5"
+                    className="p-3.5 rounded-2xl border border-[#EBDADA] bg-white flex items-center gap-3.5"
                   >
                     <img
                       src={item.imageUrl}
                       alt={lang === 'mm' ? item.titleMm : item.titleEn}
                       referrerPolicy="no-referrer"
-                      className="w-16 h-16 rounded-xl object-cover bg-[#FAF8F6] border border-[#E7DFD7] shrink-0"
+                      className="w-16 h-16 rounded-xl object-cover bg-[#FCF8F8] border border-[#EBDADA] shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold text-[#1E1612] truncate">
+                      <div className="text-sm font-semibold text-[#241113] truncate">
                         {lang === 'mm' ? item.titleMm : item.titleEn}
                       </div>
-                      <div className="text-xs text-[#8C6A52] truncate">
+                      <div className="text-xs text-[#9A4D53] truncate">
                         {lang === 'mm' ? item.variantLabelMm : item.variantLabelEn}
                       </div>
-                      <div className="mt-1.5 font-mono-tabular text-sm font-semibold text-[#1E1612]">
+                      <div className="mt-1.5 font-mono-tabular text-sm font-semibold text-[#241113]">
                         {formatMmk(item.unitPriceMmk * item.quantity, lang)}
                       </div>
                     </div>
@@ -381,11 +381,11 @@ export function CartCheckoutDrawer({
                         type="button"
                         onClick={() => onRemoveItem(item.key)}
                         aria-label={t.remove}
-                        className="text-[#8B7B71] hover:text-[#BE123C] cursor-pointer"
+                        className="text-[#927275] hover:text-[#BE123C] cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
-                      <div className="inline-flex items-center border border-[#E7DFD7] rounded-lg bg-[#FAF8F6]">
+                      <div className="inline-flex items-center border border-[#EBDADA] rounded-lg bg-[#FCF8F8]">
                         <button
                           type="button"
                           onClick={() => onUpdateQty(item.key, item.quantity - 1)}
@@ -410,9 +410,9 @@ export function CartCheckoutDrawer({
               </div>
 
               {/* Promo Code Box */}
-              <div className="p-4 rounded-2xl bg-[#FAF8F6] border border-[#E7DFD7]">
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#1E1612] mb-2">
-                  <Tag className="w-3.5 h-3.5 text-[#5C4030]" />
+              <div className="p-4 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA]">
+                <div className="flex items-center gap-2 text-xs font-semibold text-[#241113] mb-2">
+                  <Tag className="w-3.5 h-3.5 text-[#7A2229]" />
                   <span>{lang === 'mm' ? 'Discount / Promotion ကုဒ်' : 'Promo Code'}</span>
                 </div>
                 <div className="flex gap-2">
@@ -421,12 +421,12 @@ export function CartCheckoutDrawer({
                     value={promoInput}
                     onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
                     placeholder={t.promoCodePlaceholder}
-                    className="flex-1 h-10 px-3 rounded-xl bg-white border border-[#D2C1B4] text-xs font-mono-tabular uppercase text-[#1E1612] focus:outline-none focus:border-[#5C4030]"
+                    className="flex-1 h-10 px-3 rounded-xl bg-white border border-[#D8BEBE] text-xs font-mono-tabular uppercase text-[#241113] focus:outline-none focus:border-[#7A2229]"
                   />
                   <button
                     type="button"
                     onClick={handleApplyPromo}
-                    className="h-10 px-4 rounded-xl bg-[#4B3427] text-white text-xs font-medium hover:bg-[#38251B] cursor-pointer whitespace-nowrap shrink-0"
+                    className="h-10 px-4 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] cursor-pointer whitespace-nowrap shrink-0"
                   >
                     {t.apply}
                   </button>
@@ -454,18 +454,18 @@ export function CartCheckoutDrawer({
               <button
                 type="button"
                 onClick={() => setStep('cart')}
-                className="text-xs font-medium text-[#5C4030] hover:underline cursor-pointer"
+                className="text-xs font-medium text-[#7A2229] hover:underline cursor-pointer"
               >
                 ← {lang === 'mm' ? 'ခြင်းတောင်းသို့ ပြန်သွားမည်' : 'Back to Cart'}
               </button>
 
               {!user && (
-                <div className="p-4 rounded-2xl bg-[#FAF8F6] border border-[#D2C1B4] flex items-center justify-between gap-3">
-                  <p className="text-xs text-[#1E1612] font-medium">{t.signInToCheckout}</p>
+                <div className="p-4 rounded-2xl bg-[#FCF8F8] border border-[#D8BEBE] flex items-center justify-between gap-3">
+                  <p className="text-xs text-[#241113] font-medium">{t.signInToCheckout}</p>
                   <button
                     type="button"
                     onClick={onSignIn}
-                    className="px-3.5 py-2 rounded-xl bg-[#4B3427] text-white text-xs font-medium whitespace-nowrap shrink-0 cursor-pointer"
+                    className="px-3.5 py-2 rounded-xl bg-[#6B1D24] text-white text-xs font-medium whitespace-nowrap shrink-0 cursor-pointer"
                   >
                     {t.signIn}
                   </button>
@@ -473,12 +473,12 @@ export function CartCheckoutDrawer({
               )}
 
               {/* Order Totals Summary */}
-              <div className="p-4 rounded-2xl bg-[#FAF8F6] border border-[#E7DFD7] space-y-1.5 text-sm">
-                <div className="flex justify-between text-xs text-[#63554C]">
+              <div className="p-4 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA] space-y-1.5 text-sm">
+                <div className="flex justify-between text-xs text-[#6A4B4E]">
                   <span>{t.orderSummary}</span>
                   <span>{cart.reduce((s, i) => s + i.quantity, 0)} items</span>
                 </div>
-                <div className="flex justify-between text-[#1E1612]">
+                <div className="flex justify-between text-[#241113]">
                   <span>{t.subtotal}</span>
                   <span className="font-mono-tabular">{formatMmk(subtotalMmk, lang)}</span>
                 </div>
@@ -490,9 +490,9 @@ export function CartCheckoutDrawer({
                     <span className="font-mono-tabular">-{formatMmk(discountMmk, lang)}</span>
                   </div>
                 )}
-                <div className="pt-2 border-t border-[#E7DFD7] flex justify-between font-bold text-[#1E1612]">
+                <div className="pt-2 border-t border-[#EBDADA] flex justify-between font-bold text-[#241113]">
                   <span>{t.total}</span>
-                  <span className="font-mono-tabular text-base text-[#5C4030]">
+                  <span className="font-mono-tabular text-base text-[#7A2229]">
                     {formatMmk(totalMmk, lang)}
                   </span>
                 </div>
@@ -500,33 +500,33 @@ export function CartCheckoutDrawer({
 
               {/* Customer Delivery Info */}
               <div className="space-y-3">
-                <h3 className="font-display text-sm font-semibold text-[#1E1612]">
+                <h3 className="font-display text-sm font-semibold text-[#241113]">
                   {t.customerDetails}
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs text-[#63554C] mb-1">{t.fullName} *</label>
+                    <label className="block text-xs text-[#6A4B4E] mb-1">{t.fullName} *</label>
                     <input
                       type="text"
                       required
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full h-10 px-3 rounded-xl border border-[#D2C1B4] text-sm text-[#1E1612] focus:outline-none focus:border-[#5C4030]"
+                      className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-sm text-[#241113] focus:outline-none focus:border-[#7A2229]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-[#63554C] mb-1">{t.phone}</label>
+                    <label className="block text-xs text-[#6A4B4E] mb-1">{t.phone}</label>
                     <input
                       type="text"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
                       placeholder="09xxxxxxxxx"
-                      className="w-full h-10 px-3 rounded-xl border border-[#D2C1B4] text-sm text-[#1E1612] focus:outline-none focus:border-[#5C4030]"
+                      className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-sm text-[#241113] focus:outline-none focus:border-[#7A2229]"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs text-[#63554C] mb-1">
+                  <label className="block text-xs text-[#6A4B4E] mb-1">
                     {t.deliveryContactLabel} *
                   </label>
                   <input
@@ -535,19 +535,19 @@ export function CartCheckoutDrawer({
                     value={deliveryContact}
                     onChange={(e) => setDeliveryContact(e.target.value)}
                     placeholder={t.deliveryContactPlaceholder}
-                    className="w-full h-10 px-3 rounded-xl border border-[#D2C1B4] text-sm text-[#1E1612] focus:outline-none focus:border-[#5C4030]"
+                    className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-sm text-[#241113] focus:outline-none focus:border-[#7A2229]"
                   />
                 </div>
               </div>
 
               {/* Payment Method & QR Code */}
               <div className="space-y-3">
-                <h3 className="font-display text-sm font-semibold text-[#1E1612]">
+                <h3 className="font-display text-sm font-semibold text-[#241113]">
                   {t.paymentMethodTitle}
                 </h3>
 
                 {paymentMethods.length === 0 ? (
-                  <div className="p-4 rounded-xl bg-[#FAF8F6] border border-[#E7DFD7] text-xs text-[#63554C]">
+                  <div className="p-4 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-xs text-[#6A4B4E]">
                     {lang === 'mm'
                       ? 'ငွေလွဲ QR အကောင့်များ မထည့်သွင်းရသေးပါ။ Admin မှ Admin Studio > QR & Page Control တွင် ထည့်သွင်းပေးပါ။'
                       : 'No active payment QR channels configured yet. Sign in as Admin to add KBZPay / WavePay QR channels.'}
@@ -563,14 +563,14 @@ export function CartCheckoutDrawer({
                           onClick={() => setSelectedPaymentId(pm.id)}
                           className={`p-3 rounded-xl border text-left transition-colors cursor-pointer ${
                             active
-                              ? 'border-[#4B3427] bg-[#FAF8F6]'
-                              : 'border-[#E7DFD7] bg-white hover:border-[#C5B2A3]'
+                              ? 'border-[#6B1D24] bg-[#FCF8F8]'
+                              : 'border-[#EBDADA] bg-white hover:border-[#CCA9A9]'
                           }`}
                         >
-                          <div className="text-xs font-semibold text-[#1E1612] truncate">
+                          <div className="text-xs font-semibold text-[#241113] truncate">
                             {pm.name}
                           </div>
-                          <div className="text-[11px] font-mono-tabular text-[#63554C] truncate mt-0.5">
+                          <div className="text-[11px] font-mono-tabular text-[#6A4B4E] truncate mt-0.5">
                             {pm.accountNumber}
                           </div>
                         </button>
@@ -580,13 +580,13 @@ export function CartCheckoutDrawer({
                 )}
 
                 {selectedMethod && (
-                  <div className="p-4 rounded-2xl border border-[#D2C1B4] bg-[#FAF8F6] grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+                  <div className="p-4 rounded-2xl border border-[#D8BEBE] bg-[#FCF8F8] grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
                     <div className="sm:col-span-5 flex flex-col items-center">
                       {selectedMethod.qrImageDataUrl ? (
                         <button
                           type="button"
                           onClick={() => setQrZoomOpen(true)}
-                          className="bg-white p-2 rounded-xl border border-[#E7DFD7] hover:border-[#5C4030] transition-colors cursor-pointer"
+                          className="bg-white p-2 rounded-xl border border-[#EBDADA] hover:border-[#7A2229] transition-colors cursor-pointer"
                           title="Click to enlarge QR"
                         >
                           <img
@@ -596,45 +596,45 @@ export function CartCheckoutDrawer({
                           />
                         </button>
                       ) : (
-                        <div className="w-36 h-36 rounded-xl bg-white border border-[#E7DFD7] flex items-center justify-center text-[#8B7B71]">
+                        <div className="w-36 h-36 rounded-xl bg-white border border-[#EBDADA] flex items-center justify-center text-[#927275]">
                           <QrCode className="w-10 h-10" />
                         </div>
                       )}
-                      <span className="mt-1.5 text-[11px] text-[#8C6A52]">
+                      <span className="mt-1.5 text-[11px] text-[#9A4D53]">
                         {lang === 'mm' ? 'QR ချဲ့ကြည့်ရန် နှိပ်ပါ' : 'Tap QR to enlarge'}
                       </span>
                     </div>
 
                     <div className="sm:col-span-7 space-y-2 text-xs">
                       <div>
-                        <span className="text-[#63554C]">{t.accountName}: </span>
-                        <span className="font-semibold text-[#1E1612]">
+                        <span className="text-[#6A4B4E]">{t.accountName}: </span>
+                        <span className="font-semibold text-[#241113]">
                           {selectedMethod.accountName}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between gap-2 bg-white px-3 py-2 rounded-xl border border-[#E7DFD7]">
+                      <div className="flex items-center justify-between gap-2 bg-white px-3 py-2 rounded-xl border border-[#EBDADA]">
                         <div>
-                          <div className="text-[11px] text-[#63554C]">{t.accountNumber}</div>
-                          <div className="font-mono-tabular text-sm font-bold text-[#1E1612]">
+                          <div className="text-[11px] text-[#6A4B4E]">{t.accountNumber}</div>
+                          <div className="font-mono-tabular text-sm font-bold text-[#241113]">
                             {selectedMethod.accountNumber}
                           </div>
                         </div>
                         <button
                           type="button"
                           onClick={() => handleCopyAccount(selectedMethod.accountNumber)}
-                          className="px-2.5 py-1.5 rounded-lg bg-[#FAF8F6] border border-[#E7DFD7] text-[#4B3427] font-medium inline-flex items-center gap-1 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-lg bg-[#FCF8F8] border border-[#EBDADA] text-[#6B1D24] font-medium inline-flex items-center gap-1 cursor-pointer"
                         >
                           {copiedAcc ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                           <span>{copiedAcc ? t.copied : t.copy}</span>
                         </button>
                       </div>
                       <div>
-                        <span className="text-[#63554C]">{t.amountToPay}: </span>
-                        <span className="font-mono-tabular font-bold text-[#5C4030]">
+                        <span className="text-[#6A4B4E]">{t.amountToPay}: </span>
+                        <span className="font-mono-tabular font-bold text-[#7A2229]">
                           {formatMmk(totalMmk, lang)}
                         </span>
                       </div>
-                      <p className="text-[11px] text-[#63554C] leading-relaxed">
+                      <p className="text-[11px] text-[#6A4B4E] leading-relaxed">
                         {lang === 'mm'
                           ? selectedMethod.instructionsMm
                           : selectedMethod.instructionsEn}
@@ -645,9 +645,9 @@ export function CartCheckoutDrawer({
               </div>
 
               {/* Last 4 Digits + Receipt Screenshot Upload */}
-              <div className="space-y-4 pt-2 border-t border-[#E7DFD7]">
+              <div className="space-y-4 pt-2 border-t border-[#EBDADA]">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1E1612] mb-1">
+                  <label className="block text-xs font-semibold text-[#241113] mb-1">
                     {t.receiptLast4Label} *
                   </label>
                   <input
@@ -658,16 +658,16 @@ export function CartCheckoutDrawer({
                     value={receiptLast4}
                     onChange={(e) => setReceiptLast4(e.target.value.replace(/\D/g, '').slice(0, 4))}
                     placeholder={t.receiptLast4Placeholder}
-                    className="w-full h-11 px-4 rounded-xl border border-[#D2C1B4] font-mono-tabular text-lg tracking-[0.25em] font-semibold text-[#1E1612] focus:outline-none focus:border-[#5C4030]"
+                    className="w-full h-11 px-4 rounded-xl border border-[#D8BEBE] font-mono-tabular text-lg tracking-[0.25em] font-semibold text-[#241113] focus:outline-none focus:border-[#7A2229]"
                   />
-                  <p className="mt-1 text-[11px] text-[#63554C]">{t.receiptLast4Hint}</p>
+                  <p className="mt-1 text-[11px] text-[#6A4B4E]">{t.receiptLast4Hint}</p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1E1612] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#241113] mb-1.5">
                     {t.uploadScreenshotLabel} *
                   </label>
-                  <label className="block rounded-2xl border border-dashed border-[#C5B2A3] bg-[#FAF8F6] hover:bg-[#F4EFE9] transition-colors p-4 text-center cursor-pointer">
+                  <label className="block rounded-2xl border border-dashed border-[#CCA9A9] bg-[#FCF8F8] hover:bg-[#F7EEEE] transition-colors p-4 text-center cursor-pointer">
                     <input
                       type="file"
                       accept="image/*"
@@ -679,24 +679,24 @@ export function CartCheckoutDrawer({
                         <img
                           src={receiptImageDataUrl}
                           alt="Payment receipt preview"
-                          className="max-h-48 mx-auto rounded-xl border border-[#E7DFD7] object-contain"
+                          className="max-h-48 mx-auto rounded-xl border border-[#EBDADA] object-contain"
                         />
-                        <div className="inline-flex items-center gap-1.5 text-xs font-medium text-[#5C4030]">
+                        <div className="inline-flex items-center gap-1.5 text-xs font-medium text-[#7A2229]">
                           <Upload className="w-3.5 h-3.5" />
                           <span>{t.changeScreenshot}</span>
                         </div>
                       </div>
                     ) : (
                       <div className="py-4 flex flex-col items-center">
-                        <ImagePlus className="w-7 h-7 text-[#8C6A52] mb-2" />
-                        <span className="text-xs font-medium text-[#1E1612]">
+                        <ImagePlus className="w-7 h-7 text-[#9A4D53] mb-2" />
+                        <span className="text-xs font-medium text-[#241113]">
                           {uploadingImage
                             ? lang === 'mm'
                               ? 'ပုံပြင်ဆင်နေပါသည်...'
                               : 'Compressing screenshot...'
                             : t.uploadScreenshotLabel}
                         </span>
-                        <span className="mt-1 text-[11px] text-[#63554C]">
+                        <span className="mt-1 text-[11px] text-[#6A4B4E]">
                           {t.uploadScreenshotHint}
                         </span>
                       </div>
@@ -716,19 +716,19 @@ export function CartCheckoutDrawer({
 
         {/* Drawer Footer */}
         {cart.length > 0 && step !== 'success' && (
-          <div className="p-5 border-t border-[#E7DFD7] bg-[#FAF8F6]">
+          <div className="p-5 border-t border-[#EBDADA] bg-[#FCF8F8]">
             {step === 'cart' ? (
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-[#63554C]">{t.total}</span>
-                  <span className="font-mono-tabular text-lg font-bold text-[#1E1612]">
+                  <span className="text-[#6A4B4E]">{t.total}</span>
+                  <span className="font-mono-tabular text-lg font-bold text-[#241113]">
                     {formatMmk(totalMmk, lang)}
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setStep('checkout')}
-                  className="w-full h-11 rounded-xl bg-[#4B3427] text-white text-sm font-medium hover:bg-[#38251B] transition-colors cursor-pointer"
+                  className="w-full h-11 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] transition-colors cursor-pointer"
                 >
                   {t.proceedCheckout}
                 </button>
@@ -738,7 +738,7 @@ export function CartCheckoutDrawer({
                 type="submit"
                 form="checkout-form"
                 disabled={submitting || uploadingImage}
-                className="w-full h-11 rounded-xl bg-[#4B3427] text-white text-sm font-medium hover:bg-[#38251B] disabled:opacity-50 transition-colors cursor-pointer"
+                className="w-full h-11 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {submitting ? t.submitting : t.submitPayment}
               </button>
@@ -750,7 +750,7 @@ export function CartCheckoutDrawer({
       {/* QR Enlarge Lightbox */}
       {qrZoomOpen && selectedMethod?.qrImageDataUrl && (
         <div
-          className="fixed inset-0 z-[60] bg-[#1E1612]/75 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[60] bg-[#241113]/75 flex items-center justify-center p-4"
           onClick={() => setQrZoomOpen(false)}
         >
           <div
@@ -758,13 +758,13 @@ export function CartCheckoutDrawer({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-3">
-              <span className="font-display font-semibold text-sm text-[#1E1612]">
+              <span className="font-display font-semibold text-sm text-[#241113]">
                 {selectedMethod.name}
               </span>
               <button
                 type="button"
                 onClick={() => setQrZoomOpen(false)}
-                className="p-1 text-[#63554C] cursor-pointer"
+                className="p-1 text-[#6A4B4E] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -772,9 +772,9 @@ export function CartCheckoutDrawer({
             <img
               src={selectedMethod.qrImageDataUrl}
               alt={selectedMethod.name}
-              className="w-full max-h-80 object-contain rounded-xl border border-[#E7DFD7]"
+              className="w-full max-h-80 object-contain rounded-xl border border-[#EBDADA]"
             />
-            <p className="mt-3 font-mono-tabular text-sm font-semibold text-[#4B3427]">
+            <p className="mt-3 font-mono-tabular text-sm font-semibold text-[#6B1D24]">
               {selectedMethod.accountNumber} · {selectedMethod.accountName}
             </p>
           </div>

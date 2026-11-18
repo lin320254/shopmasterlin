@@ -51,14 +51,14 @@ export function CustomerOrdersDashboard({
   if (!user) {
     return (
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <div className="bg-white border border-[#E7DFD7] rounded-2xl p-10">
-          <Package className="w-10 h-10 text-[#8C6A52] mx-auto mb-3" />
-          <h2 className="font-display text-2xl font-bold text-[#1E1612]">{t.myOrdersTitle}</h2>
-          <p className="mt-2 text-sm text-[#63554C] max-w-md mx-auto">{t.signInToCheckout}</p>
+        <div className="bg-white border border-[#EBDADA] rounded-2xl p-10">
+          <Package className="w-10 h-10 text-[#9A4D53] mx-auto mb-3" />
+          <h2 className="font-display text-2xl font-bold text-[#241113]">{t.myOrdersTitle}</h2>
+          <p className="mt-2 text-sm text-[#6A4B4E] max-w-md mx-auto">{t.signInToCheckout}</p>
           <button
             type="button"
             onClick={onSignIn}
-            className="mt-6 px-6 py-2.5 rounded-xl bg-[#4B3427] text-white text-sm font-medium hover:bg-[#38251B] cursor-pointer"
+            className="mt-6 px-6 py-2.5 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] cursor-pointer"
           >
             {t.signIn}
           </button>
@@ -136,10 +136,10 @@ export function CustomerOrdersDashboard({
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#1E1612]">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#241113]">
             {t.myOrdersTitle}
           </h1>
-          <p className="mt-1.5 text-sm text-[#63554C]">{t.myOrdersSubtitle}</p>
+          <p className="mt-1.5 text-sm text-[#6A4B4E]">{t.myOrdersSubtitle}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
           {deliveredCount > 0 && (
@@ -147,7 +147,7 @@ export function CustomerOrdersDashboard({
               type="button"
               onClick={handleDownloadSummary}
               disabled={generatingPdfId !== null}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#4B3427] text-white text-xs font-medium hover:bg-[#38251B] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               {generatingPdfId === 'summary' ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -162,7 +162,7 @@ export function CustomerOrdersDashboard({
           <button
             type="button"
             onClick={onBackToShop}
-            className="px-4 py-2 rounded-xl border border-[#D2C1B4] text-xs font-medium text-[#4B3427] hover:bg-[#FAF8F6] whitespace-nowrap shrink-0 cursor-pointer"
+            className="px-4 py-2 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] whitespace-nowrap shrink-0 cursor-pointer"
           >
             ← {t.backToShop}
           </button>
@@ -185,34 +185,34 @@ export function CustomerOrdersDashboard({
 
       {/* KPI Summary Strip */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white border border-[#E7DFD7] rounded-2xl p-5">
-          <div className="text-xs text-[#63554C]">{t.totalOrders}</div>
-          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#1E1612]">
+        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
+          <div className="text-xs text-[#6A4B4E]">{t.totalOrders}</div>
+          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#241113]">
             {orders.length}
           </div>
         </div>
-        <div className="bg-white border border-[#E7DFD7] rounded-2xl p-5">
-          <div className="text-xs text-[#63554C]">{t.pendingCount}</div>
+        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
+          <div className="text-xs text-[#6A4B4E]">{t.pendingCount}</div>
           <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#B45309]">
             {pendingCount}
           </div>
         </div>
-        <div className="bg-white border border-[#E7DFD7] rounded-2xl p-5">
-          <div className="text-xs text-[#63554C]">{t.deliveredCount}</div>
+        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
+          <div className="text-xs text-[#6A4B4E]">{t.deliveredCount}</div>
           <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#15803D]">
             {deliveredCount}
           </div>
         </div>
-        <div className="bg-white border border-[#E7DFD7] rounded-2xl p-5">
-          <div className="text-xs text-[#63554C]">{t.totalSpent}</div>
-          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#5C4030]">
+        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
+          <div className="text-xs text-[#6A4B4E]">{t.totalSpent}</div>
+          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#7A2229]">
             {formatMmk(totalSpent, lang)}
           </div>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-[#FAF8F6] border border-[#E7DFD7] rounded-xl mb-6">
+      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-[#FCF8F8] border border-[#EBDADA] rounded-xl mb-6">
         {(
           [
             { key: 'all', label: t.filterAll },
@@ -227,8 +227,8 @@ export function CustomerOrdersDashboard({
             onClick={() => setFilter(tab.key)}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
               filter === tab.key
-                ? 'bg-white text-[#1E1612] border border-[#E7DFD7]'
-                : 'text-[#63554C] hover:text-[#1E1612]'
+                ? 'bg-white text-[#241113] border border-[#EBDADA]'
+                : 'text-[#6A4B4E] hover:text-[#241113]'
             }`}
           >
             {tab.label}
@@ -238,10 +238,10 @@ export function CustomerOrdersDashboard({
 
       {/* Orders List */}
       {filteredOrders.length === 0 ? (
-        <div className="bg-white border border-[#E7DFD7] rounded-2xl p-12 text-center">
-          <Package className="w-10 h-10 text-[#C5B2A3] mx-auto mb-3" />
-          <h3 className="font-display text-base font-semibold text-[#1E1612]">{t.noOrdersYet}</h3>
-          <p className="mt-1 text-sm text-[#63554C]">{t.noOrdersDesc}</p>
+        <div className="bg-white border border-[#EBDADA] rounded-2xl p-12 text-center">
+          <Package className="w-10 h-10 text-[#CCA9A9] mx-auto mb-3" />
+          <h3 className="font-display text-base font-semibold text-[#241113]">{t.noOrdersYet}</h3>
+          <p className="mt-1 text-sm text-[#6A4B4E]">{t.noOrdersDesc}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -252,12 +252,12 @@ export function CustomerOrdersDashboard({
             return (
               <article
                 key={order.id}
-                className="bg-white border border-[#E7DFD7] rounded-2xl p-5 sm:p-6 space-y-4"
+                className="bg-white border border-[#EBDADA] rounded-2xl p-5 sm:p-6 space-y-4"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F4EFE9]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F7EEEE]">
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#63554C]">
-                      <span className="font-mono-tabular font-semibold text-[#1E1612] text-sm">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#6A4B4E]">
+                      <span className="font-mono-tabular font-semibold text-[#241113] text-sm">
                         {order.orderNumber}
                       </span>
                       <span aria-hidden="true">·</span>
@@ -272,7 +272,7 @@ export function CustomerOrdersDashboard({
                   </div>
                   <div className="flex items-center gap-4">
                     {renderStatus(order.status)}
-                    <span className="font-mono-tabular text-base font-bold text-[#1E1612]">
+                    <span className="font-mono-tabular text-base font-bold text-[#241113]">
                       {formatMmk(order.totalMmk, lang)}
                     </span>
                   </div>
@@ -288,14 +288,14 @@ export function CustomerOrdersDashboard({
                           key={`${item.productId}_${idx}`}
                           className="flex flex-wrap items-center justify-between gap-2 text-sm"
                         >
-                          <div className="text-[#1E1612] min-w-0">
-                            <span className="font-mono-tabular text-xs text-[#8C6A52] mr-2">
+                          <div className="text-[#241113] min-w-0">
+                            <span className="font-mono-tabular text-xs text-[#9A4D53] mr-2">
                               {item.quantity}x
                             </span>
                             <span className="font-medium">
                               {lang === 'mm' ? item.titleMm : item.titleEn}
                             </span>
-                            <span className="text-xs text-[#63554C] ml-1.5">
+                            <span className="text-xs text-[#6A4B4E] ml-1.5">
                               ({lang === 'mm' ? item.variantLabelMm : item.variantLabelEn})
                             </span>
                           </div>
@@ -304,28 +304,28 @@ export function CustomerOrdersDashboard({
                               <button
                                 type="button"
                                 onClick={() => onReviewProduct(item.productId)}
-                                className="inline-flex items-center gap-1 text-xs font-medium text-[#5C4030] hover:underline whitespace-nowrap cursor-pointer"
+                                className="inline-flex items-center gap-1 text-xs font-medium text-[#7A2229] hover:underline whitespace-nowrap cursor-pointer"
                               >
                                 <Star
                                   className={`w-3.5 h-3.5 ${
                                     alreadyReviewed
-                                      ? 'fill-[#B45309] text-[#B45309]'
-                                      : 'text-[#8C6A52]'
+                                      ? 'fill-[#7A2229] text-[#7A2229]'
+                                      : 'text-[#9A4D53]'
                                   }`}
                                 />
                                 <span>{alreadyReviewed ? t.editReview : t.writeReview}</span>
                               </button>
                             )}
-                            <span className="font-mono-tabular text-xs font-medium text-[#63554C]">
+                            <span className="font-mono-tabular text-xs font-medium text-[#6A4B4E]">
                               {formatMmk(item.unitPriceMmk * item.quantity, lang)}
                             </span>
                           </div>
                         </div>
                       );
                     })}
-                    <div className="pt-2 text-xs text-[#63554C]">
+                    <div className="pt-2 text-xs text-[#6A4B4E]">
                       {t.deliveryContactLabel}:{' '}
-                      <span className="text-[#1E1612] font-medium">{order.deliveryContact}</span>
+                      <span className="text-[#241113] font-medium">{order.deliveryContact}</span>
                     </div>
                   </div>
 
@@ -357,8 +357,8 @@ export function CustomerOrdersDashboard({
                     )}
 
                     {order.adminNote && (
-                      <div className="p-3 rounded-xl bg-[#FAF8F6] border border-[#E7DFD7] text-xs text-[#63554C]">
-                        <span className="font-semibold text-[#1E1612]">{t.adminNoteLabel}: </span>
+                      <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-xs text-[#6A4B4E]">
+                        <span className="font-semibold text-[#241113]">{t.adminNoteLabel}: </span>
                         {order.adminNote}
                       </div>
                     )}
@@ -369,7 +369,7 @@ export function CustomerOrdersDashboard({
                           type="button"
                           onClick={() => handleDownloadInvoice(order)}
                           disabled={generatingPdfId !== null}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#4B3427] text-xs font-medium text-white hover:bg-[#38251B] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#6B1D24] text-xs font-medium text-white hover:bg-[#52141A] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                         >
                           {generatingPdfId === order.id ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -386,7 +386,7 @@ export function CustomerOrdersDashboard({
                         <button
                           type="button"
                           onClick={() => setLightboxImage(order.receiptImageDataUrl)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#D2C1B4] text-xs font-medium text-[#4B3427] hover:bg-[#FAF8F6] whitespace-nowrap shrink-0 cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] whitespace-nowrap shrink-0 cursor-pointer"
                         >
                           <Eye className="w-3.5 h-3.5" />
                           <span>{t.viewReceipt}</span>
@@ -404,7 +404,7 @@ export function CustomerOrdersDashboard({
       {/* Receipt Lightbox */}
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-50 bg-[#1E1612]/75 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-[#241113]/75 flex items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
         >
           <div
@@ -415,7 +415,7 @@ export function CustomerOrdersDashboard({
               <button
                 type="button"
                 onClick={() => setLightboxImage(null)}
-                className="p-1 text-[#63554C] cursor-pointer"
+                className="p-1 text-[#6A4B4E] cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

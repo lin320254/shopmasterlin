@@ -13,15 +13,15 @@ const CONTENT_W = CANVAS_W - MARGIN * 2;
 
 const COLORS = {
   white: '#FFFFFF',
-  alabaster: '#FAF8F6',
-  champagne: '#F4EFE9',
-  border: '#E7DFD7',
-  bronzeBorder: '#D2C1B4',
-  ink: '#1E1612',
-  secondary: '#63554C',
-  muted: '#8B7B71',
-  espresso: '#4B3427',
-  titanium: '#8C6A52',
+  alabaster: '#FCF8F8',
+  champagne: '#F7EEEE',
+  border: '#EBDADA',
+  bronzeBorder: '#D8BEBE',
+  ink: '#241113',
+  secondary: '#6A4B4E',
+  muted: '#927275',
+  espresso: '#6B1D24',
+  titanium: '#9A4D53',
   green: '#15803D',
   greenBg: '#F0FDF4',
   greenBorder: '#BBF7D0',
@@ -225,7 +225,7 @@ export async function downloadOrderInvoicePdf(
     return 76;
   };
 
-  // Top Header Banner (Desert Espresso)
+  // Top Header Banner (Deep Maroon)
   drawRoundedRect(ctx, MARGIN, 64, CONTENT_W, 136, 20, COLORS.espresso);
 
   ctx.fillStyle = COLORS.white;
@@ -233,7 +233,7 @@ export async function downloadOrderInvoicePdf(
   ctx.textAlign = 'left';
   ctx.fillText(storeName, MARGIN + 36, 94);
 
-  ctx.fillStyle = '#E7DFD7';
+  ctx.fillStyle = '#F7EEEE';
   ctx.font = `500 20px ${FONT_SANS}`;
   ctx.fillText(
     isMm ? 'တရားဝင် ငွေပေးချေမှု ပြေစာနှင့် အော်ဒါမှတ်တမ်း' : 'OFFICIAL ORDER INVOICE & RECEIPT SUMMARY',
@@ -544,7 +544,7 @@ export async function downloadCompletedOrdersSummaryPdf(
   ctx.font = `700 32px ${FONT_SANS}`;
   ctx.fillText(storeName, MARGIN + 34, 92);
 
-  ctx.fillStyle = '#E7DFD7';
+  ctx.fillStyle = '#F7EEEE';
   ctx.font = `500 20px ${FONT_SANS}`;
   ctx.fillText(
     isMm ? 'အတည်ပြုပြီး အော်ဒါမှတ်တမ်း အနှစ်ချုပ် (PDF)' : 'COMPLETED ORDERS SUMMARY STATEMENT',
@@ -561,7 +561,7 @@ export async function downloadCompletedOrdersSummaryPdf(
     98
   );
   if (customerLabel) {
-    ctx.fillStyle = '#E7DFD7';
+    ctx.fillStyle = '#F7EEEE';
     ctx.font = `400 18px ${FONT_SANS}`;
     ctx.fillText(customerLabel, CANVAS_W - MARGIN - 34, 138);
   }

@@ -32,16 +32,16 @@ export class ErrorBoundary extends React.Component<Props, State> {
       }
 
       return (
-        <div className="min-h-screen bg-[#FAF8F6] flex items-center justify-center p-6">
-          <div className="max-w-lg w-full bg-white border border-[#E7DFD7] rounded-2xl p-8 text-center">
-            <h2 className="font-display text-xl font-semibold text-[#1E1612] mb-2">
+        <div className="min-h-screen bg-[#FCF8F8] flex items-center justify-center p-6">
+          <div className="max-w-lg w-full bg-white border border-[#EBDADA] rounded-2xl p-8 text-center">
+            <h2 className="font-display text-xl font-semibold text-[#241113] mb-2">
               Unable to complete request
             </h2>
-            <p className="text-sm text-[#63554C] mb-6 break-words">{friendly}</p>
+            <p className="text-sm text-[#6A4B4E] mb-6 break-words">{friendly}</p>
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="px-5 py-2.5 rounded-xl bg-[#4B3427] text-white text-sm font-medium hover:bg-[#38251B] transition-colors cursor-pointer"
+              className="px-5 py-2.5 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] transition-colors cursor-pointer"
             >
               Reload Storefront
             </button>

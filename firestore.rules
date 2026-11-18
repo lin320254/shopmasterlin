@@ -283,8 +283,8 @@ service cloud.firestore {
     }
 
     match /promotions/{promoId} {
-      allow get: if isSignedIn() && isValidId(promoId) && (existing().active == true || isAdmin());
-      allow list: if isSignedIn() && (resource.data.active == true || isBootstrappedAdmin());
+      allow get: if isValidId(promoId) && (existing().active == true || isAdmin());
+      allow list: if resource.data.active == true || isBootstrappedAdmin();
       allow create: if isAdmin() && isValidId(promoId) && isValidPromotion(incoming()) && incoming().createdAt == request.time && incoming().updatedAt == request.time;
       allow update: if isAdmin() && isValidId(promoId) && isValidPromotion(incoming()) && incoming().code == existing().code && incoming().createdAt == existing().createdAt && incoming().updatedAt == request.time;
       allow delete: if isAdmin() && isValidId(promoId);

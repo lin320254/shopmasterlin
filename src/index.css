@@ -3,16 +3,16 @@
 @layer base {
   :root {
     --bg-canvas: #ffffff;
-    --bg-alabaster: #faf8f6;
-    --bg-champagne: #f4efe9;
-    --border-hairline: #e7dfd7;
-    --border-bronze: #d2c1b4;
-    --ink-primary: #1e1612;
-    --ink-secondary: #63554c;
-    --ink-muted: #8b7b71;
-    --accent-espresso: #4b3427;
-    --accent-espresso-hover: #38251b;
-    --accent-titanium: #8c6a52;
+    --bg-alabaster: #fcf8f8;
+    --bg-champagne: #f7eeee;
+    --border-hairline: #ebdada;
+    --border-bronze: #d8bebe;
+    --ink-primary: #241113;
+    --ink-secondary: #6a4b4e;
+    --ink-muted: #927275;
+    --accent-maroon: #6b1d24;
+    --accent-maroon-hover: #52141a;
+    --accent-rose-brown: #9a4d53;
   }
 
   html {

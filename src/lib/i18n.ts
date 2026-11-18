@@ -150,6 +150,8 @@ export const translations = {
     telegramSendingTest: 'Sending Test...',
     telegramTestSuccess: 'Test alert sent to your Telegram chat!',
     telegramSecretsHint: 'Configure TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in your environment secrets.',
+    adminSyncedMsg: 'Saved & synced live across the storefront.',
+    adminSaveFailed: 'Could not save changes',
   },
   mm: {
     navShop: 'ပစ္စည်းများ',
@@ -293,5 +295,7 @@ export const translations = {
     telegramSendingTest: 'ပေးပို့နေပါသည်...',
     telegramTestSuccess: 'Telegram သို့ စမ်းသပ်စာ ပေးပို့ပြီးပါပြီ!',
     telegramSecretsHint: 'TELEGRAM_BOT_TOKEN နှင့် TELEGRAM_CHAT_ID တို့ကို Environment Secrets တွင် ထည့်သွင်းပါ။',
+    adminSyncedMsg: 'သိမ်းဆည်းပြီး Website တစ်ခုလုံးသို့ Realtime Sync လုပ်ပြီးပါပြီ။',
+    adminSaveFailed: 'ပြင်ဆင်မှု သိမ်းဆည်း၍ မရပါ',
   },
 } as const;

@@ -75,7 +75,7 @@ function StorefrontApp() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState<'featured' | 'price_asc' | 'price_desc'>('featured');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
@@ -93,7 +93,7 @@ function StorefrontApp() {
   const isAdmin = Boolean(
     user &&
       user.emailVerified &&
-      (user.email === BOOTSTRAPPED_ADMIN_EMAIL || isAdminDoc)
+      (user.email?.toLowerCase() === BOOTSTRAPPED_ADMIN_EMAIL.toLowerCase() || isAdminDoc)
   );
 
   useEffect(() => {
@@ -143,16 +143,20 @@ function StorefrontApp() {
     return unsub;
   }, []);
 
-  // Listen to Store Settings
+  // Listen to Store Settings in real time for all visitors
   useEffect(() => {
     const unsub = onSnapshot(
       doc(db, 'store_settings', 'global'),
       (snap) => {
         if (snap.exists()) {
           setHasStoreSettingsDoc(true);
-          setStoreSettings(snap.data() as StoreSettings);
+          setStoreSettings({
+            ...DEFAULT_STORE_SETTINGS,
+            ...(snap.data() as Partial<StoreSettings>),
+          });
         } else {
           setHasStoreSettingsDoc(false);
+          setStoreSettings(DEFAULT_STORE_SETTINGS);
         }
       },
       (err) => handleFirestoreError(err, OperationType.GET, 'store_settings/global')
@@ -200,13 +204,9 @@ function StorefrontApp() {
     return unsub;
   }, [authReady, isAdmin]);
 
-  // Listen to Promotions (only when signed in, per Firestore security rule)
+  // Listen to Promotions in real time for all visitors (active-only for guests/customers, all for Admin)
   useEffect(() => {
-    if (!authReady || !user) {
-      setRawPromotions([]);
-      setPromosLoaded(true);
-      return;
-    }
+    if (!authReady) return;
     const q = isAdmin
       ? query(collection(db, 'promotions'))
       : query(collection(db, 'promotions'), where('active', '==', true));
@@ -221,7 +221,7 @@ function StorefrontApp() {
       (err) => handleFirestoreError(err, OperationType.LIST, 'promotions')
     );
     return unsub;
-  }, [authReady, user, isAdmin]);
+  }, [authReady, isAdmin]);
 
   // Listen to Orders (all if Admin, own userId if customer)
   useEffect(() => {
@@ -267,10 +267,15 @@ function StorefrontApp() {
     return unsub;
   }, []);
 
-  // Auto-seed initial Store Settings, Products, Payment Methods, and Promotions on first Admin login
+  // Auto-seed initial Store Settings, Products, Payment Methods, and Promotions ONLY on first-ever store initialization
   useEffect(() => {
     if (!authReady || !isAdmin || seededRef.current) return;
     if (!productsLoaded || !paymentsLoaded || !promosLoaded || hasStoreSettingsDoc === null) {
+      return;
+    }
+    if (hasStoreSettingsDoc) {
+      // Store already initialized; never resurrect deleted starter items
+      seededRef.current = true;
       return;
     }
 
@@ -278,12 +283,10 @@ function StorefrontApp() {
 
     const runSeed = async () => {
       try {
-        if (!hasStoreSettingsDoc) {
-          await setDoc(doc(db, 'store_settings', 'global'), {
-            ...DEFAULT_STORE_SETTINGS,
-            updatedAt: serverTimestamp(),
-          });
-        }
+        await setDoc(doc(db, 'store_settings', 'global'), {
+          ...DEFAULT_STORE_SETTINGS,
+          updatedAt: serverTimestamp(),
+        });
         if (rawProducts.length === 0) {
           await Promise.all(
             STARTER_PRODUCTS.map((p, idx) =>
@@ -318,7 +321,8 @@ function StorefrontApp() {
           );
         }
       } catch (err) {
-        handleFirestoreError(err, OperationType.WRITE, 'initial_seed');
+        seededRef.current = false;
+        console.error('Initial store seed failed:', err);
       }
     };
 
@@ -335,27 +339,61 @@ function StorefrontApp() {
     rawPromotions.length,
   ]);
 
-  // Display starter catalog preview if Admin hasn't signed in yet to seed Firestore
+  // Display starter catalog preview ONLY before first Admin initialization (hasStoreSettingsDoc === false)
   const displayProducts = useMemo<Product[]>(() => {
     if (rawProducts.length > 0) return rawProducts;
-    if (productsLoaded && !isAdmin) {
+    if (hasStoreSettingsDoc === false && productsLoaded && !isAdmin) {
       return STARTER_PRODUCTS.map((p, idx) => ({
         ...p,
         id: `preview_prod_${idx + 1}`,
       }));
     }
-    return [];
-  }, [rawProducts, productsLoaded, isAdmin]);
+    return rawProducts;
+  }, [rawProducts, hasStoreSettingsDoc, productsLoaded, isAdmin]);
 
   const activeCatalogProducts = useMemo(
     () => displayProducts.filter((p) => p.active),
     [displayProducts]
   );
 
+  const selectedProduct = useMemo(
+    () => (selectedProductId ? displayProducts.find((p) => p.id === selectedProductId) || null : null),
+    [displayProducts, selectedProductId]
+  );
+
+  const syncedCart = useMemo<CartItem[]>(() => {
+    if (cart.length === 0) return [];
+    const discountFactor =
+      storeSettings.sitewideDiscountPercent > 0
+        ? 1 - storeSettings.sitewideDiscountPercent / 100
+        : 1;
+    return cart.map((item) => {
+      const liveProd = activeCatalogProducts.find((p) => p.id === item.productId);
+      if (!liveProd) return item;
+      const liveVariant = liveProd.variants.find((v) => v.id === item.variantId);
+      const rawPrice = liveVariant ? liveVariant.priceMmk : liveProd.priceMmk;
+      const liveUnitPrice =
+        discountFactor < 1 ? Math.round(rawPrice * discountFactor) : rawPrice;
+      return {
+        ...item,
+        titleEn: liveProd.titleEn,
+        titleMm: liveProd.titleMm,
+        variantLabelEn: liveVariant ? liveVariant.labelEn : item.variantLabelEn,
+        variantLabelMm: liveVariant ? liveVariant.labelMm : item.variantLabelMm,
+        unitPriceMmk: liveUnitPrice,
+        imageUrl: liveProd.imageUrl,
+        deliveryType: liveProd.deliveryType,
+      };
+    });
+  }, [cart, activeCatalogProducts, storeSettings.sitewideDiscountPercent]);
+
   const displayPromotions = useMemo<Promotion[]>(() => {
     if (rawPromotions.length > 0) return rawPromotions.filter((p) => p.active);
-    return STARTER_PROMOTIONS.map((p, idx) => ({ ...p, id: `preview_promo_${idx + 1}` }));
-  }, [rawPromotions]);
+    if (hasStoreSettingsDoc === false && promosLoaded && !isAdmin) {
+      return STARTER_PROMOTIONS.map((p, idx) => ({ ...p, id: `preview_promo_${idx + 1}` }));
+    }
+    return [];
+  }, [rawPromotions, hasStoreSettingsDoc, promosLoaded, isAdmin]);
 
   const activePaymentMethods = useMemo(
     () => rawPaymentMethods.filter((pm) => pm.active),
@@ -450,7 +488,7 @@ function StorefrontApp() {
       return [...prev, newItem];
     });
     if (openCheckout) {
-      setSelectedProduct(null);
+      setSelectedProductId(null);
       setCartOpen(true);
     }
   };
@@ -469,10 +507,10 @@ function StorefrontApp() {
     }, 60);
   };
 
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = syncedCart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#1E1612]">
+    <div className="min-h-screen flex flex-col bg-white text-[#241113]">
       <Header
         settings={storeSettings}
         lang={lang}
@@ -506,10 +544,10 @@ function StorefrontApp() {
             >
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                  <h2 className="font-display text-2xl font-bold text-[#1E1612]">
+                  <h2 className="font-display text-2xl font-bold text-[#241113]">
                     {t.featuredCollection}
                   </h2>
-                  <p className="text-xs text-[#63554C] mt-1">
+                  <p className="text-xs text-[#6A4B4E] mt-1">
                     {filteredCatalog.length}{' '}
                     {lang === 'mm' ? 'မျိုး ပြသထားပါသည်' : 'items available'}
                   </p>
@@ -517,7 +555,7 @@ function StorefrontApp() {
 
                 <div className="flex flex-wrap items-center gap-3">
                   {/* Category Filter Segmented Controls */}
-                  <div className="flex flex-wrap items-center gap-1 p-1 bg-[#FAF8F6] border border-[#E7DFD7] rounded-xl">
+                  <div className="flex flex-wrap items-center gap-1 p-1 bg-[#FCF8F8] border border-[#EBDADA] rounded-xl">
                     {categories.map((cat) => (
                       <button
                         key={cat}
@@ -525,8 +563,8 @@ function StorefrontApp() {
                         onClick={() => setSelectedCategory(cat)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
                           selectedCategory === cat
-                            ? 'bg-white text-[#1E1612] border border-[#E7DFD7]'
-                            : 'text-[#63554C] hover:text-[#1E1612]'
+                            ? 'bg-white text-[#241113] border border-[#EBDADA]'
+                            : 'text-[#6A4B4E] hover:text-[#241113]'
                         }`}
                       >
                         {cat === 'all' ? t.allCategories : cat}
@@ -540,7 +578,7 @@ function StorefrontApp() {
                     onChange={(e) =>
                       setSortBy(e.target.value as 'featured' | 'price_asc' | 'price_desc')
                     }
-                    className="h-9 px-3 rounded-xl bg-white border border-[#D2C1B4] text-xs font-medium text-[#1E1612] cursor-pointer"
+                    className="h-9 px-3 rounded-xl bg-white border border-[#D8BEBE] text-xs font-medium text-[#241113] cursor-pointer"
                   >
                     <option value="featured">{t.sortFeatured}</option>
                     <option value="price_asc">{t.sortPriceAsc}</option>
@@ -550,7 +588,7 @@ function StorefrontApp() {
               </div>
 
               {filteredCatalog.length === 0 ? (
-                <div className="bg-[#FAF8F6] border border-[#E7DFD7] rounded-2xl p-12 text-center text-sm text-[#63554C]">
+                <div className="bg-[#FCF8F8] border border-[#EBDADA] rounded-2xl p-12 text-center text-sm text-[#6A4B4E]">
                   {lang === 'mm'
                     ? 'ရှာဖွေမှုနှင့် ကိုက်ညီသော ပစ္စည်း မတွေ့ရှိပါ။'
                     : 'No products match your search or category filter.'}
@@ -567,7 +605,7 @@ function StorefrontApp() {
                         sitewideDiscountPercent={storeSettings.sitewideDiscountPercent}
                         ratingAvg={stats?.avg}
                         reviewCount={stats?.count || 0}
-                        onSelect={setSelectedProduct}
+                        onSelect={(p) => setSelectedProductId(p.id)}
                       />
                     );
                   })}
@@ -579,12 +617,12 @@ function StorefrontApp() {
             {displayPromotions.length > 0 && (
               <section
                 id="promotions-section"
-                className="bg-[#FAF8F6] border-y border-[#E7DFD7] py-12"
+                className="bg-[#FCF8F8] border-y border-[#EBDADA] py-12"
               >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-display text-xl font-bold text-[#1E1612] flex items-center gap-2">
-                      <Tag className="w-5 h-5 text-[#5C4030]" />
+                    <h2 className="font-display text-xl font-bold text-[#241113] flex items-center gap-2">
+                      <Tag className="w-5 h-5 text-[#7A2229]" />
                       <span>{t.activePromoBanner}</span>
                     </h2>
                   </div>
@@ -593,16 +631,16 @@ function StorefrontApp() {
                     {displayPromotions.map((promo) => (
                       <div
                         key={promo.id}
-                        className="bg-white border border-[#E7DFD7] rounded-2xl p-5 flex items-center justify-between gap-4"
+                        className="bg-white border border-[#EBDADA] rounded-2xl p-5 flex items-center justify-between gap-4"
                       >
                         <div>
-                          <div className="font-mono-tabular text-base font-bold text-[#5C4030]">
+                          <div className="font-mono-tabular text-base font-bold text-[#7A2229]">
                             {promo.code}
                           </div>
-                          <div className="text-sm font-medium text-[#1E1612] mt-0.5">
+                          <div className="text-sm font-medium text-[#241113] mt-0.5">
                             {lang === 'mm' ? promo.titleMm : promo.titleEn}
                           </div>
-                          <div className="text-xs text-[#63554C] mt-1">
+                          <div className="text-xs text-[#6A4B4E] mt-1">
                             {t.minOrder}: {formatMmk(promo.minOrderMmk, lang)}
                           </div>
                         </div>
@@ -613,7 +651,7 @@ function StorefrontApp() {
                             setCopiedCode(promo.code);
                             setTimeout(() => setCopiedCode(null), 1400);
                           }}
-                          className="px-3.5 py-2 rounded-xl border border-[#D2C1B4] text-xs font-medium text-[#4B3427] hover:bg-[#FAF8F6] inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                          className="px-3.5 py-2 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
                         >
                           {copiedCode === promo.code ? (
                             <Check className="w-3.5 h-3.5 text-[#15803D]" />
@@ -631,21 +669,21 @@ function StorefrontApp() {
 
             {/* How Ordering Works Section */}
             <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-              <h2 className="font-display text-xl font-bold text-[#1E1612] mb-6">
+              <h2 className="font-display text-xl font-bold text-[#241113] mb-6">
                 {t.howItWorksTitle}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 rounded-2xl bg-[#FAF8F6] border border-[#E7DFD7]">
-                  <h3 className="font-display text-sm font-bold text-[#5C4030]">{t.step1Title}</h3>
-                  <p className="mt-2 text-sm text-[#63554C] leading-relaxed">{t.step1Desc}</p>
+                <div className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <h3 className="font-display text-sm font-bold text-[#7A2229]">{t.step1Title}</h3>
+                  <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed">{t.step1Desc}</p>
                 </div>
-                <div className="p-6 rounded-2xl bg-[#FAF8F6] border border-[#E7DFD7]">
-                  <h3 className="font-display text-sm font-bold text-[#5C4030]">{t.step2Title}</h3>
-                  <p className="mt-2 text-sm text-[#63554C] leading-relaxed">{t.step2Desc}</p>
+                <div className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <h3 className="font-display text-sm font-bold text-[#7A2229]">{t.step2Title}</h3>
+                  <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed">{t.step2Desc}</p>
                 </div>
-                <div className="p-6 rounded-2xl bg-[#FAF8F6] border border-[#E7DFD7]">
-                  <h3 className="font-display text-sm font-bold text-[#5C4030]">{t.step3Title}</h3>
-                  <p className="mt-2 text-sm text-[#63554C] leading-relaxed">{t.step3Desc}</p>
+                <div className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <h3 className="font-display text-sm font-bold text-[#7A2229]">{t.step3Title}</h3>
+                  <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed">{t.step3Desc}</p>
                 </div>
               </div>
             </section>
@@ -662,7 +700,7 @@ function StorefrontApp() {
             onReviewProduct={(productId) => {
               const target = displayProducts.find((p) => p.id === productId);
               if (target) {
-                setSelectedProduct(target);
+                setSelectedProductId(target.id);
               }
             }}
             onSignIn={handleSignIn}
@@ -686,10 +724,10 @@ function StorefrontApp() {
       </main>
 
       {/* Clean Minimal Footer */}
-      <footer className="bg-[#FAF8F6] border-t border-[#E7DFD7] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#63554C]">
+      <footer className="bg-[#FCF8F8] border-t border-[#EBDADA] py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#6A4B4E]">
           <div>
-            <span className="font-display font-bold text-[#1E1612] mr-2">
+            <span className="font-display font-bold text-[#241113] mr-2">
               {storeSettings.storeName}
             </span>
             <span>
@@ -716,7 +754,7 @@ function StorefrontApp() {
           isAdmin={isAdmin}
           eligibleOrder={eligibleOrderForSelectedProduct}
           onSignIn={handleSignIn}
-          onClose={() => setSelectedProduct(null)}
+          onClose={() => setSelectedProductId(null)}
           onAddToCart={handleAddToCart}
         />
       )}
@@ -726,7 +764,7 @@ function StorefrontApp() {
         open={cartOpen}
         onClose={() => setCartOpen(false)}
         lang={lang}
-        cart={cart}
+        cart={syncedCart}
         onUpdateQty={handleUpdateQty}
         onRemoveItem={(key) => setCart((prev) => prev.filter((i) => i.key !== key))}
         onClearCart={() => setCart([])}

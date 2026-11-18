@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from 'react';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { deleteDoc, doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { db, getReadableFirestoreError, OperationType } from '../lib/firebase';
 import { formatMmk, translations } from '../lib/i18n';
 import type { CartItem, Language, Order, Product, ProductReview } from '../types';
 
@@ -169,10 +169,12 @@ export function ProductModal({
       setReviewNotice(t.reviewSaved);
       setTimeout(() => setReviewNotice(''), 2500);
     } catch (err) {
-      handleFirestoreError(
-        err,
-        existingUserReview ? OperationType.UPDATE : OperationType.CREATE,
-        `product_reviews/${reviewId}`
+      setReviewError(
+        getReadableFirestoreError(
+          err,
+          existingUserReview ? OperationType.UPDATE : OperationType.CREATE,
+          `product_reviews/${reviewId}`
+        )
       );
     } finally {
       setSavingReview(false);
@@ -187,7 +189,9 @@ export function ProductModal({
       setReviewNotice(t.reviewDeleted);
       setTimeout(() => setReviewNotice(''), 2200);
     } catch (err) {
-      handleFirestoreError(err, OperationType.DELETE, `product_reviews/${reviewId}`);
+      setReviewError(
+        getReadableFirestoreError(err, OperationType.DELETE, `product_reviews/${reviewId}`)
+      );
     } finally {
       setDeletingReviewId(null);
     }
@@ -195,18 +199,18 @@ export function ProductModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-[#1E1612]/50 backdrop-blur-xs flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-[#241113]/50 backdrop-blur-xs flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white border border-[#E7DFD7] rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white border border-[#EBDADA] rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Split Purchase Module */}
         <div className="grid grid-cols-1 md:grid-cols-12">
           {/* Left Studio Image */}
-          <div className="md:col-span-5 bg-[#FAF8F6] border-b md:border-b-0 md:border-r border-[#E7DFD7] flex items-center justify-center p-6">
-            <div className="aspect-[4/3] w-full rounded-xl overflow-hidden bg-white border border-[#E7DFD7]">
+          <div className="md:col-span-5 bg-[#FCF8F8] border-b md:border-b-0 md:border-r border-[#EBDADA] flex items-center justify-center p-6">
+            <div className="aspect-[4/3] w-full rounded-xl overflow-hidden bg-white border border-[#EBDADA]">
               {product.imageUrl ? (
                 <img
                   src={product.imageUrl}
@@ -216,7 +220,7 @@ export function ProductModal({
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <Package className="w-10 h-10 text-[#8C6A52]" />
+                  <Package className="w-10 h-10 text-[#9A4D53]" />
                 </div>
               )}
             </div>
@@ -226,27 +230,27 @@ export function ProductModal({
           <div className="md:col-span-7 p-6 sm:p-7 flex flex-col justify-between">
             <div>
               <div className="flex items-start justify-between gap-4">
-                <div className="text-xs text-[#8C6A52] font-medium">
+                <div className="text-xs text-[#9A4D53] font-medium">
                   {product.brand} · {product.category}
                 </div>
                 <button
                   type="button"
                   onClick={onClose}
                   aria-label="Close"
-                  className="p-1.5 rounded-lg text-[#63554C] hover:bg-[#FAF8F6] cursor-pointer"
+                  className="p-1.5 rounded-lg text-[#6A4B4E] hover:bg-[#FCF8F8] cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              <h2 className="font-display text-xl sm:text-2xl font-bold text-[#1E1612] mt-1.5">
+              <h2 className="font-display text-xl sm:text-2xl font-bold text-[#241113] mt-1.5">
                 {title}
               </h2>
 
               {reviews.length > 0 && (
-                <div className="mt-2 flex items-center gap-2 text-xs text-[#63554C]">
-                  <span className="inline-flex items-center gap-1 font-mono-tabular font-semibold text-[#1E1612]">
-                    <Star className="w-3.5 h-3.5 fill-[#B45309] text-[#B45309]" />
+                <div className="mt-2 flex items-center gap-2 text-xs text-[#6A4B4E]">
+                  <span className="inline-flex items-center gap-1 font-mono-tabular font-semibold text-[#241113]">
+                    <Star className="w-3.5 h-3.5 fill-[#7A2229] text-[#7A2229]" />
                     <span>{avgRating.toFixed(1)}</span>
                   </span>
                   <span aria-hidden="true">·</span>
@@ -256,13 +260,13 @@ export function ProductModal({
                 </div>
               )}
 
-              <p className="mt-3 text-sm text-[#63554C] leading-relaxed">{description}</p>
+              <p className="mt-3 text-sm text-[#6A4B4E] leading-relaxed">{description}</p>
 
-              <div className="mt-3 text-xs text-[#8C6A52] font-medium">{deliveryLabel}</div>
+              <div className="mt-3 text-xs text-[#9A4D53] font-medium">{deliveryLabel}</div>
 
               {/* Variant Selector */}
               <div className="mt-5">
-                <div className="text-xs font-semibold text-[#1E1612] mb-2">
+                <div className="text-xs font-semibold text-[#241113] mb-2">
                   {lang === 'mm' ? 'ရွေးချယ်နိုင်သော Plan / အမျိုးအစား' : 'Select Plan / Variant'}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -282,18 +286,18 @@ export function ProductModal({
                         }}
                         className={`p-3 rounded-xl border text-left transition-colors cursor-pointer ${
                           isSelected
-                            ? 'border-[#4B3427] bg-[#FAF8F6]'
-                            : 'border-[#E7DFD7] bg-white hover:border-[#C5B2A3]'
+                            ? 'border-[#6B1D24] bg-[#FCF8F8]'
+                            : 'border-[#EBDADA] bg-white hover:border-[#CCA9A9]'
                         }`}
                       >
-                        <div className="text-xs font-semibold text-[#1E1612]">
+                        <div className="text-xs font-semibold text-[#241113]">
                           {lang === 'mm' ? variant.labelMm : variant.labelEn}
                         </div>
                         <div className="mt-1 flex items-center justify-between text-xs">
-                          <span className="font-mono-tabular font-semibold text-[#5C4030]">
+                          <span className="font-mono-tabular font-semibold text-[#7A2229]">
                             {formatMmk(vPrice, lang)}
                           </span>
-                          <span className="text-[#8B7B71]">
+                          <span className="text-[#927275]">
                             {variant.stock > 0 ? `${variant.stock} left` : t.outOfStock}
                           </span>
                         </div>
@@ -305,35 +309,35 @@ export function ProductModal({
             </div>
 
             {/* Price + Quantity + Actions */}
-            <div className="mt-6 pt-5 border-t border-[#E7DFD7] space-y-4">
+            <div className="mt-6 pt-5 border-t border-[#EBDADA] space-y-4">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   {comparePrice > discountedUnitPrice && (
-                    <div className="text-xs text-[#8B7B71] line-through tabular-nums">
+                    <div className="text-xs text-[#927275] line-through tabular-nums">
                       {formatMmk(comparePrice * quantity, lang)}
                     </div>
                   )}
-                  <div className="font-mono-tabular text-2xl font-bold text-[#1E1612]">
+                  <div className="font-mono-tabular text-2xl font-bold text-[#241113]">
                     {formatMmk(discountedUnitPrice * quantity, lang)}
                   </div>
                 </div>
 
-                <div className="inline-flex items-center border border-[#D2C1B4] rounded-xl bg-[#FAF8F6]">
+                <div className="inline-flex items-center border border-[#D8BEBE] rounded-xl bg-[#FCF8F8]">
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="p-2.5 text-[#1E1612] hover:bg-white rounded-l-xl cursor-pointer"
+                    className="p-2.5 text-[#241113] hover:bg-white rounded-l-xl cursor-pointer"
                     aria-label="Decrease quantity"
                   >
                     <Minus className="w-3.5 h-3.5" />
                   </button>
-                  <span className="px-3.5 text-sm font-mono-tabular font-semibold text-[#1E1612]">
+                  <span className="px-3.5 text-sm font-mono-tabular font-semibold text-[#241113]">
                     {quantity}
                   </span>
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.min(maxQty, q + 1))}
-                    className="p-2.5 text-[#1E1612] hover:bg-white rounded-r-xl cursor-pointer"
+                    className="p-2.5 text-[#241113] hover:bg-white rounded-r-xl cursor-pointer"
                     aria-label="Increase quantity"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -346,7 +350,7 @@ export function ProductModal({
                   type="button"
                   disabled={outOfStock}
                   onClick={() => handleAdd(false)}
-                  className="h-11 px-4 rounded-xl border border-[#4B3427] text-sm font-medium text-[#4B3427] hover:bg-[#FAF8F6] disabled:opacity-50 transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
+                  className="h-11 px-4 rounded-xl border border-[#6B1D24] text-sm font-medium text-[#6B1D24] hover:bg-[#FCF8F8] disabled:opacity-50 transition-colors inline-flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {addedFeedback ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
                   <span>{addedFeedback ? t.addedToCart : t.addToCart}</span>
@@ -355,7 +359,7 @@ export function ProductModal({
                   type="button"
                   disabled={outOfStock}
                   onClick={() => handleAdd(true)}
-                  className="h-11 px-4 rounded-xl bg-[#4B3427] text-white text-sm font-medium hover:bg-[#38251B] disabled:opacity-50 transition-colors cursor-pointer"
+                  className="h-11 px-4 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   {outOfStock ? t.outOfStock : t.buyNow}
                 </button>
@@ -365,26 +369,26 @@ export function ProductModal({
         </div>
 
         {/* Verified Customer Reviews Section */}
-        <div className="border-t border-[#E7DFD7] bg-[#FAF8F6] p-6 sm:p-7 space-y-5">
+        <div className="border-t border-[#EBDADA] bg-[#FCF8F8] p-6 sm:p-7 space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <h3 className="font-display text-base font-bold text-[#1E1612]">
+            <h3 className="font-display text-base font-bold text-[#241113]">
               {t.reviewsTitle}
             </h3>
             {reviews.length > 0 && (
-              <div className="flex items-center gap-2 text-xs text-[#63554C]">
+              <div className="flex items-center gap-2 text-xs text-[#6A4B4E]">
                 <div className="flex items-center gap-0.5">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
                       className={`w-3.5 h-3.5 ${
                         star <= Math.round(avgRating)
-                          ? 'fill-[#B45309] text-[#B45309]'
-                          : 'text-[#D2C1B4]'
+                          ? 'fill-[#7A2229] text-[#7A2229]'
+                          : 'text-[#D8BEBE]'
                       }`}
                     />
                   ))}
                 </div>
-                <span className="font-mono-tabular font-semibold text-[#1E1612]">
+                <span className="font-mono-tabular font-semibold text-[#241113]">
                   {avgRating.toFixed(1)} / 5.0
                 </span>
                 <span aria-hidden="true">·</span>
@@ -399,10 +403,10 @@ export function ProductModal({
           {eligibleOrder ? (
             <form
               onSubmit={handleSubmitReview}
-              className="bg-white border border-[#E7DFD7] rounded-2xl p-4 sm:p-5 space-y-3"
+              className="bg-white border border-[#EBDADA] rounded-2xl p-4 sm:p-5 space-y-3"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="text-xs font-semibold text-[#1E1612]">
+                <span className="text-xs font-semibold text-[#241113]">
                   {existingUserReview ? t.editReview : t.writeReview}
                 </span>
                 <span className="inline-flex items-center gap-1 text-xs font-medium text-[#15803D]">
@@ -414,7 +418,7 @@ export function ProductModal({
               </div>
 
               <div>
-                <div className="text-xs text-[#63554C] mb-1.5">{t.yourRating}</div>
+                <div className="text-xs text-[#6A4B4E] mb-1.5">{t.yourRating}</div>
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((star) => {
                     const active = star <= (hoverRating || ratingInput);
@@ -426,11 +430,11 @@ export function ProductModal({
                         onMouseLeave={() => setHoverRating(0)}
                         onClick={() => setRatingInput(star)}
                         aria-label={`${star} stars`}
-                        className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-[#FAF8F6] transition-colors cursor-pointer"
+                        className="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-[#FCF8F8] transition-colors cursor-pointer"
                       >
                         <Star
                           className={`w-5 h-5 transition-colors ${
-                            active ? 'fill-[#B45309] text-[#B45309]' : 'text-[#D2C1B4]'
+                            active ? 'fill-[#7A2229] text-[#7A2229]' : 'text-[#D8BEBE]'
                           }`}
                         />
                       </button>
@@ -440,7 +444,7 @@ export function ProductModal({
               </div>
 
               <div>
-                <div className="flex items-center justify-between text-xs text-[#63554C] mb-1">
+                <div className="flex items-center justify-between text-xs text-[#6A4B4E] mb-1">
                   <label htmlFor="product-review-comment">{t.yourComment}</label>
                   <span className="font-mono-tabular text-[11px]">
                     {commentInput.length}/600
@@ -453,7 +457,7 @@ export function ProductModal({
                   value={commentInput}
                   onChange={(e) => setCommentInput(e.target.value)}
                   placeholder={t.commentPlaceholder}
-                  className="w-full p-3 rounded-xl border border-[#D2C1B4] text-sm text-[#1E1612] focus:outline-none focus:border-[#5C4030]"
+                  className="w-full p-3 rounded-xl border border-[#D8BEBE] text-sm text-[#241113] focus:outline-none focus:border-[#7A2229]"
                 />
               </div>
 
@@ -478,7 +482,7 @@ export function ProductModal({
                 <button
                   type="submit"
                   disabled={savingReview}
-                  className="px-4 py-2 rounded-xl bg-[#4B3427] text-white text-xs font-medium hover:bg-[#38251B] disabled:opacity-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-50 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   {savingReview
                     ? '...'
@@ -489,13 +493,13 @@ export function ProductModal({
               </div>
             </form>
           ) : (
-            <div className="bg-white border border-[#E7DFD7] rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-[#63554C]">
+            <div className="bg-white border border-[#EBDADA] rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs text-[#6A4B4E]">
               <span>{user ? t.reviewEligibilityHint : t.signInToReview}</span>
               {!user && (
                 <button
                   type="button"
                   onClick={onSignIn}
-                  className="px-3 py-1.5 rounded-lg border border-[#D2C1B4] font-medium text-[#4B3427] hover:bg-[#FAF8F6] whitespace-nowrap shrink-0 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-[#D8BEBE] font-medium text-[#6B1D24] hover:bg-[#FCF8F8] whitespace-nowrap shrink-0 cursor-pointer"
                 >
                   {t.signIn}
                 </button>
@@ -505,7 +509,7 @@ export function ProductModal({
 
           {/* Review List */}
           {reviews.length === 0 ? (
-            <p className="text-xs text-[#63554C]">{t.noReviewsYet}</p>
+            <p className="text-xs text-[#6A4B4E]">{t.noReviewsYet}</p>
           ) : (
             <div className="space-y-3">
               {reviews.map((rev) => {
@@ -520,20 +524,20 @@ export function ProductModal({
                 return (
                   <div
                     key={rev.id}
-                    className="bg-white border border-[#E7DFD7] rounded-2xl p-4 space-y-2"
+                    className="bg-white border border-[#EBDADA] rounded-2xl p-4 space-y-2"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <div className="flex flex-wrap items-center gap-2 text-xs">
-                        <span className="font-semibold text-[#1E1612]">{rev.authorName}</span>
-                        <span aria-hidden="true" className="text-[#D2C1B4]">·</span>
+                        <span className="font-semibold text-[#241113]">{rev.authorName}</span>
+                        <span aria-hidden="true" className="text-[#D8BEBE]">·</span>
                         <span className="inline-flex items-center gap-1 text-[#15803D] font-medium">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>{t.verifiedPurchase}</span>
                         </span>
                         {dateLabel && (
                           <>
-                            <span aria-hidden="true" className="text-[#D2C1B4]">·</span>
-                            <span className="text-[#8B7B71]">{dateLabel}</span>
+                            <span aria-hidden="true" className="text-[#D8BEBE]">·</span>
+                            <span className="text-[#927275]">{dateLabel}</span>
                           </>
                         )}
                       </div>
@@ -545,8 +549,8 @@ export function ProductModal({
                               key={star}
                               className={`w-3.5 h-3.5 ${
                                 star <= rev.rating
-                                  ? 'fill-[#B45309] text-[#B45309]'
-                                  : 'text-[#D2C1B4]'
+                                  ? 'fill-[#7A2229] text-[#7A2229]'
+                                  : 'text-[#D8BEBE]'
                               }`}
                             />
                           ))}
@@ -557,7 +561,7 @@ export function ProductModal({
                             onClick={() => handleDeleteReview(rev.id)}
                             disabled={deletingReviewId === rev.id}
                             aria-label={t.deleteReview}
-                            className="p-1 text-[#8B7B71] hover:text-[#BE123C] cursor-pointer"
+                            className="p-1 text-[#927275] hover:text-[#BE123C] cursor-pointer"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -565,7 +569,7 @@ export function ProductModal({
                       </div>
                     </div>
 
-                    <p className="text-sm text-[#1E1612] leading-relaxed whitespace-pre-wrap">
+                    <p className="text-sm text-[#241113] leading-relaxed whitespace-pre-wrap">
                       {rev.comment}
                     </p>
                   </div>
