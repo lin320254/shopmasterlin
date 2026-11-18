@@ -1,0 +1,6 @@
+{
+  "name": "Aurelia Commerce",
+  "description": "Bilingual Myanmar & English e-commerce storefront with QR payment verification, receipt screenshot & last-4-digit proof, customer order dashboard, and full admin CMS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

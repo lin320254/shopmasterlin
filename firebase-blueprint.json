@@ -1,0 +1,253 @@
+{
+  "entities": {
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Global storefront configuration, branding, hero content, promotions, and currency settings controlled by Admin.",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 80 },
+        "announcementEn": { "type": "string", "maxLength": 200 },
+        "announcementMm": { "type": "string", "maxLength": 200 },
+        "heroTitleEn": { "type": "string", "maxLength": 140 },
+        "heroTitleMm": { "type": "string", "maxLength": 140 },
+        "heroSubtitleEn": { "type": "string", "maxLength": 400 },
+        "heroSubtitleMm": { "type": "string", "maxLength": 400 },
+        "heroImageUrl": { "type": "string", "maxLength": 350000 },
+        "sitewideDiscountPercent": { "type": "number" },
+        "sitewidePromoLabelEn": { "type": "string", "maxLength": 100 },
+        "sitewidePromoLabelMm": { "type": "string", "maxLength": 100 },
+        "exchangeRateMmk": { "type": "number" },
+        "supportPhone": { "type": "string", "maxLength": 60 },
+        "supportTelegram": { "type": "string", "maxLength": 80 },
+        "footerNoteEn": { "type": "string", "maxLength": 200 },
+        "footerNoteMm": { "type": "string", "maxLength": 200 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["storeName", "exchangeRateMmk", "updatedAt"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Catalog product or digital/physical service managed by Admin.",
+      "type": "object",
+      "properties": {
+        "titleEn": { "type": "string", "maxLength": 120 },
+        "titleMm": { "type": "string", "maxLength": 120 },
+        "brand": { "type": "string", "maxLength": 60 },
+        "category": { "type": "string", "maxLength": 60 },
+        "deliveryType": { "type": "string", "enum": ["digital", "physical", "service"] },
+        "descriptionEn": { "type": "string", "maxLength": 1000 },
+        "descriptionMm": { "type": "string", "maxLength": 1000 },
+        "deliveryLabelEn": { "type": "string", "maxLength": 120 },
+        "deliveryLabelMm": { "type": "string", "maxLength": 120 },
+        "imageUrl": { "type": "string", "maxLength": 350000 },
+        "priceMmk": { "type": "number" },
+        "compareAtMmk": { "type": "number" },
+        "stock": { "type": "number" },
+        "variants": { "type": "array" },
+        "featured": { "type": "boolean" },
+        "active": { "type": "boolean" },
+        "badgeTextEn": { "type": "string", "maxLength": 40 },
+        "badgeTextMm": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "titleEn",
+        "titleMm",
+        "brand",
+        "category",
+        "deliveryType",
+        "priceMmk",
+        "stock",
+        "active",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PaymentMethod": {
+      "title": "PaymentMethod",
+      "description": "Merchant payment channel with account details and QR code image uploaded by Admin.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 60 },
+        "accountName": { "type": "string", "maxLength": 80 },
+        "accountNumber": { "type": "string", "maxLength": 60 },
+        "qrImageDataUrl": { "type": "string", "maxLength": 350000 },
+        "instructionsEn": { "type": "string", "maxLength": 300 },
+        "instructionsMm": { "type": "string", "maxLength": 300 },
+        "active": { "type": "boolean" },
+        "sortOrder": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "accountName", "accountNumber", "active", "createdAt", "updatedAt"]
+    },
+    "Promotion": {
+      "title": "Promotion",
+      "description": "Discount coupon or promotion code configured by Admin.",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "maxLength": 40, "pattern": "^[A-Z0-9_\\-]+$" },
+        "titleEn": { "type": "string", "maxLength": 100 },
+        "titleMm": { "type": "string", "maxLength": 100 },
+        "discountType": { "type": "string", "enum": ["percent", "fixed"] },
+        "discountValue": { "type": "number" },
+        "minOrderMmk": { "type": "number" },
+        "maxUses": { "type": "number" },
+        "usedCount": { "type": "number" },
+        "active": { "type": "boolean" },
+        "expiresAtIso": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "code",
+        "discountType",
+        "discountValue",
+        "minOrderMmk",
+        "active",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer order with receipt last 4 digits, payment screenshot proof, and admin verification status.",
+      "type": "object",
+      "properties": {
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "customerEmail": { "type": "string", "maxLength": 160 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 40 },
+        "deliveryContact": { "type": "string", "maxLength": 300 },
+        "items": { "type": "array" },
+        "subtotalMmk": { "type": "number" },
+        "discountMmk": { "type": "number" },
+        "totalMmk": { "type": "number" },
+        "promoCode": { "type": "string", "maxLength": 40 },
+        "paymentMethodId": { "type": "string", "maxLength": 128 },
+        "paymentMethodName": { "type": "string", "maxLength": 60 },
+        "receiptLast4": { "type": "string", "minLength": 4, "maxLength": 4, "pattern": "^[0-9]{4}$" },
+        "receiptImageDataUrl": { "type": "string", "maxLength": 350000 },
+        "status": {
+          "type": "string",
+          "enum": ["pending_verification", "verified_delivered", "rejected"]
+        },
+        "deliveryPayload": { "type": "string", "maxLength": 2000 },
+        "adminNote": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "orderNumber",
+        "userId",
+        "customerEmail",
+        "customerName",
+        "deliveryContact",
+        "items",
+        "subtotalMmk",
+        "discountMmk",
+        "totalMmk",
+        "paymentMethodId",
+        "paymentMethodName",
+        "receiptLast4",
+        "receiptImageDataUrl",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ProductReview": {
+      "title": "ProductReview",
+      "description": "Verified customer 5-star rating and comment tied to a completed order for a purchased product. Stores no PII.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "orderId": { "type": "string", "maxLength": 128 },
+        "orderNumber": { "type": "string", "maxLength": 40 },
+        "authorName": { "type": "string", "maxLength": 80 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "maxLength": 600 },
+        "verifiedPurchase": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "productId",
+        "userId",
+        "orderId",
+        "orderNumber",
+        "authorName",
+        "rating",
+        "comment",
+        "verifiedPurchase",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated customer profile and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 160 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "defaultAddress": { "type": "string", "maxLength": 300 },
+        "preferredLang": { "type": "string", "enum": ["mm", "en"] },
+        "role": { "type": "string", "enum": ["customer", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt", "updatedAt"]
+    },
+    "AdminRecord": {
+      "title": "AdminRecord",
+      "description": "Trusted admin role assignment.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 160 },
+        "grantedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "grantedAt"]
+    }
+  },
+  "firestore": {
+    "/store_settings/{docId}": {
+      "schema": { "$ref": "#/entities/StoreSettings" },
+      "description": "Storefront global CMS configuration."
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Storefront product catalog."
+    },
+    "/payment_methods/{methodId}": {
+      "schema": { "$ref": "#/entities/PaymentMethod" },
+      "description": "Admin-managed payment channels and QR codes."
+    },
+    "/promotions/{promoId}": {
+      "schema": { "$ref": "#/entities/Promotion" },
+      "description": "Discount coupons and promotions."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer orders and payment verification receipts."
+    },
+    "/product_reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/ProductReview" },
+      "description": "Verified buyer product reviews and 5-star ratings."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profiles isolated to owner or admin."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminRecord" },
+      "description": "Trusted admin privileges."
+    }
+  }
+}
