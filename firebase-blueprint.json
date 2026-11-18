@@ -214,6 +214,18 @@
         "grantedAt": { "type": "string", "format": "date-time" }
       },
       "required": ["uid", "email", "grantedAt"]
+    },
+    "TelegramSettings": {
+      "title": "TelegramSettings",
+      "description": "Admin-only non-secret Telegram notification preferences (never stores bot tokens).",
+      "type": "object",
+      "properties": {
+        "notifyOnStatusChange": { "type": "boolean" },
+        "includeReceiptPhoto": { "type": "boolean" },
+        "customHeaderNote": { "type": "string", "maxLength": 120 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["notifyOnStatusChange", "includeReceiptPhoto", "updatedAt"]
     }
   },
   "firestore": {
@@ -248,6 +260,10 @@
     "/admins/{adminUid}": {
       "schema": { "$ref": "#/entities/AdminRecord" },
       "description": "Trusted admin privileges."
+    },
+    "/admin_settings/{docId}": {
+      "schema": { "$ref": "#/entities/TelegramSettings" },
+      "description": "Admin-only integration preferences."
     }
   }
 }

@@ -16,6 +16,7 @@
    - Authors can only update their own `rating`, `comment`, `authorName`, and `updatedAt` (cannot spoof `userId`, `productId`, `orderId`, or `verifiedPurchase`). Authors or Admins can delete reviews.
 7. **User Profiles (`/users/{userId}`)**: Strictly readable/writable by the owning user or an Admin. Non-admin users can only create profiles with `role == 'customer'` and cannot escalate `role` on update.
 8. **Admin Registry (`/admins/{adminUid}`)**: Only the bootstrapped store owner (`junighkhan786@gmail.com` with `email_verified == true`) can list, create, update, or delete admin records.
+9. **Admin Integration Settings (`/admin_settings/{docId}`)**: Strictly Admin-only (`get`, `create`, `update`, `delete`) for non-secret notification preferences (`notifyOnStatusChange`, `includeReceiptPhoto`, `customHeaderNote`); zero secret tokens stored in Firestore.
 
 ## 2. The "Dirty Dozen" Attack Payloads (All Must Return PERMISSION_DENIED)
 1. **Unauthenticated Order Creation**: Anonymous request attempting `create` on `/orders/ord_1`.

@@ -4,6 +4,7 @@ import {
   Check,
   CheckCircle2,
   Clock,
+  Copy,
   Edit3,
   Eye,
   ImagePlus,
@@ -11,6 +12,7 @@ import {
   Package,
   Plus,
   QrCode,
+  RefreshCw,
   Search,
   Send,
   Settings,
@@ -20,9 +22,9 @@ import {
   X,
   XCircle,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { User as FirebaseUser } from 'firebase/auth';
-import { deleteDoc, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, onSnapshot, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db, getReadableFirestoreError, OperationType } from '../lib/firebase';
 import { formatMmk, translations } from '../lib/i18n';
 import { compressImageFile } from '../lib/imageUtils';
@@ -35,6 +37,7 @@ import type {
   Product,
   Promotion,
   StoreSettings,
+  TelegramSettings,
 } from '../types';
 import { AdminProductModal } from './AdminProductModal';
 
@@ -50,7 +53,7 @@ interface AdminDashboardProps {
   orders: Order[];
 }
 
-type AdminTab = 'analytics' | 'orders' | 'products' | 'promos' | 'cms';
+type AdminTab = 'analytics' | 'orders' | 'products' | 'promos' | 'cms' | 'telegram';
 
 export function AdminDashboard({
   lang,
@@ -108,9 +111,23 @@ export function AdminDashboard({
     configured: boolean;
     hasBotToken: boolean;
     hasChatId: boolean;
+    botUsername?: string;
+    botFirstName?: string;
+    botReachable?: boolean;
+    botError?: string;
+    apiUnavailable?: boolean;
   } | null>(null);
+  const [checkingTelegram, setCheckingTelegram] = useState(false);
   const [testingTelegram, setTestingTelegram] = useState(false);
   const [telegramFeedback, setTelegramFeedback] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [telegramSettings, setTelegramSettings] = useState<TelegramSettings>({
+    notifyOnStatusChange: true,
+    includeReceiptPhoto: true,
+    customHeaderNote: '',
+  });
+  const [savingTelegramPrefs, setSavingTelegramPrefs] = useState(false);
+  const [sendingOrderToTelegram, setSendingOrderToTelegram] = useState(false);
+  const [copiedEnvKey, setCopiedEnvKey] = useState<string | null>(null);
 
   const showSyncSuccess = (customMsg?: string) => {
     setAdminNotice({ ok: true, msg: customMsg || t.adminSyncedMsg });
@@ -129,28 +146,70 @@ export function AdminDashboard({
     setSitewideLabelMm(settings.sitewidePromoLabelMm ?? '');
   }, [settings]);
 
+  const fetchTelegramStatus = useCallback(async () => {
+    if (!user || !isAdmin) return;
+    setCheckingTelegram(true);
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch('/api/telegram/status', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const contentType = res.headers.get('content-type') || '';
+      if (!res.ok || !contentType.includes('application/json')) {
+        setTelegramStatus({
+          configured: false,
+          hasBotToken: false,
+          hasChatId: false,
+          apiUnavailable: true,
+        });
+        return;
+      }
+      const data = (await res.json()) as {
+        configured: boolean;
+        hasBotToken: boolean;
+        hasChatId: boolean;
+        botUsername?: string;
+        botFirstName?: string;
+        botReachable?: boolean;
+        botError?: string;
+      };
+      setTelegramStatus({ ...data, apiUnavailable: false });
+    } catch {
+      setTelegramStatus({
+        configured: false,
+        hasBotToken: false,
+        hasChatId: false,
+        apiUnavailable: true,
+      });
+    } finally {
+      setCheckingTelegram(false);
+    }
+  }, [user, isAdmin]);
+
   useEffect(() => {
     if (!user || !isAdmin) return;
-    let cancelled = false;
-    user
-      .getIdToken()
-      .then((token) =>
-        fetch('/api/telegram/status', {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-      )
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (!cancelled && data && typeof data.configured === 'boolean') {
-          setTelegramStatus(data);
+    fetchTelegramStatus();
+  }, [user, isAdmin, fetchTelegramStatus]);
+
+  useEffect(() => {
+    if (!user || !isAdmin) return;
+    const unsub = onSnapshot(
+      doc(db, 'admin_settings', 'telegram'),
+      (snap) => {
+        if (snap.exists()) {
+          const data = snap.data() as Partial<TelegramSettings>;
+          setTelegramSettings({
+            notifyOnStatusChange: data.notifyOnStatusChange ?? true,
+            includeReceiptPhoto: data.includeReceiptPhoto ?? true,
+            customHeaderNote: data.customHeaderNote ?? '',
+          });
         }
-      })
-      .catch(() => {
-        // Ignore status check error if offline
-      });
-    return () => {
-      cancelled = true;
-    };
+      },
+      () => {
+        // Non-fatal if doc doesn't exist yet
+      }
+    );
+    return unsub;
   }, [user, isAdmin]);
 
   useEffect(() => {
@@ -287,22 +346,91 @@ export function AdminDashboard({
     };
   };
 
+  const pushOrderToTelegram = async (
+    order: Order,
+    overrides?: { status?: OrderStatus; deliveryPayload?: string; adminNote?: string }
+  ): Promise<{ ok: boolean; error?: string }> => {
+    if (!user) return { ok: false, error: 'Not signed in' };
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch('/api/telegram/notify-status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          orderNumber: order.orderNumber,
+          customerName: order.customerName,
+          customerEmail: order.customerEmail,
+          customerPhone: order.customerPhone,
+          deliveryContact: order.deliveryContact,
+          paymentMethodName: order.paymentMethodName,
+          receiptLast4: order.receiptLast4,
+          totalMmk: order.totalMmk,
+          discountMmk: order.discountMmk,
+          promoCode: order.promoCode,
+          items: order.items,
+          receiptImageDataUrl: order.receiptImageDataUrl,
+          status: overrides?.status ?? order.status,
+          deliveryPayload: overrides?.deliveryPayload ?? order.deliveryPayload,
+          adminNote: overrides?.adminNote ?? order.adminNote,
+          storeName: settings.storeName,
+          customHeaderNote: telegramSettings.customHeaderNote,
+          includeReceiptPhoto: telegramSettings.includeReceiptPhoto,
+        }),
+      });
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        return { ok: false, error: t.telegramApiOffline };
+      }
+      const json = (await res.json()) as { ok?: boolean; error?: string };
+      return res.ok && json.ok ? { ok: true } : { ok: false, error: json.error };
+    } catch {
+      return { ok: false, error: t.telegramSecretsHint };
+    }
+  };
+
   const handleUpdateOrderStatus = async (order: Order, nextStatus: OrderStatus) => {
     setUpdatingOrder(true);
     setAdminNotice(null);
+    const trimmedPayload = deliveryPayload.trim().slice(0, 2000);
+    const trimmedNote = adminNote.trim().slice(0, 500);
     try {
       await updateDoc(doc(db, 'orders', order.id), {
         status: nextStatus,
-        deliveryPayload: deliveryPayload.trim().slice(0, 2000),
-        adminNote: adminNote.trim().slice(0, 500),
+        deliveryPayload: trimmedPayload,
+        adminNote: trimmedNote,
         updatedAt: serverTimestamp(),
       });
+      if (telegramSettings.notifyOnStatusChange && telegramStatus?.configured) {
+        await pushOrderToTelegram(order, {
+          status: nextStatus,
+          deliveryPayload: trimmedPayload,
+          adminNote: trimmedNote,
+        });
+      }
       setSelectedOrderId(null);
       showSyncSuccess();
     } catch (err) {
       showSyncError(err, OperationType.UPDATE, `orders/${order.id}`);
     } finally {
       setUpdatingOrder(false);
+    }
+  };
+
+  const handleManualSendOrderToTelegram = async (order: Order) => {
+    setSendingOrderToTelegram(true);
+    setAdminNotice(null);
+    const result = await pushOrderToTelegram(order);
+    setSendingOrderToTelegram(false);
+    if (result.ok) {
+      showSyncSuccess(t.telegramOrderSent);
+    } else {
+      setAdminNotice({
+        ok: false,
+        msg: result.error || t.telegramSecretsHint,
+      });
     }
   };
 
@@ -544,6 +672,25 @@ export function AdminDashboard({
     }
   };
 
+  const handleSaveTelegramSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSavingTelegramPrefs(true);
+    setAdminNotice(null);
+    try {
+      await setDoc(doc(db, 'admin_settings', 'telegram'), {
+        notifyOnStatusChange: Boolean(telegramSettings.notifyOnStatusChange),
+        includeReceiptPhoto: Boolean(telegramSettings.includeReceiptPhoto),
+        customHeaderNote: telegramSettings.customHeaderNote.trim().slice(0, 120),
+        updatedAt: serverTimestamp(),
+      });
+      showSyncSuccess();
+    } catch (err) {
+      showSyncError(err, OperationType.WRITE, 'admin_settings/telegram');
+    } finally {
+      setSavingTelegramPrefs(false);
+    }
+  };
+
   const handleTestTelegram = async () => {
     if (!user) return;
     setTestingTelegram(true);
@@ -556,11 +703,20 @@ export function AdminDashboard({
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ storeName: settings.storeName }),
+        body: JSON.stringify({
+          storeName: settings.storeName,
+          customHeaderNote: telegramSettings.customHeaderNote,
+        }),
       });
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        setTelegramFeedback({ ok: false, msg: `${t.telegramApiOffline} — ${t.telegramSecretsHint}` });
+        return;
+      }
       const json = (await res.json()) as { ok?: boolean; error?: string };
       if (res.ok && json.ok) {
         setTelegramFeedback({ ok: true, msg: t.telegramTestSuccess });
+        fetchTelegramStatus();
       } else {
         setTelegramFeedback({ ok: false, msg: json.error || t.telegramSecretsHint });
       }
@@ -622,6 +778,7 @@ export function AdminDashboard({
             { id: 'products', label: `${t.adminTabProducts} (${products.length})`, icon: Package },
             { id: 'promos', label: t.adminTabPromos, icon: Tag },
             { id: 'cms', label: t.adminTabCms, icon: Settings },
+            { id: 'telegram', label: t.adminTabTelegram, icon: Send },
           ] as const
         ).map((tab) => {
           const Icon = tab.icon;
@@ -1074,6 +1231,18 @@ export function AdminDashboard({
                       {t.rejectOrder}
                     </button>
                   </div>
+
+                  <button
+                    type="button"
+                    disabled={sendingOrderToTelegram}
+                    onClick={() => handleManualSendOrderToTelegram(selectedOrder)}
+                    className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] bg-[#FCF8F8] text-[#6B1D24] text-xs font-medium hover:bg-[#F7EEEE] disabled:opacity-50 inline-flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>
+                      {sendingOrderToTelegram ? t.telegramSendingOrder : t.telegramSendOrderNow}
+                    </span>
+                  </button>
                 </div>
               ) : (
                 <div className="py-12 text-center text-xs text-[#6A4B4E]">
@@ -1542,49 +1711,21 @@ export function AdminDashboard({
               </form>
             </div>
 
-            {/* Telegram Shop-Owner Alert Status & Test */}
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
+            {/* Telegram Integration Shortcut Card */}
+            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1">
                 <h3 className="font-display text-base font-bold text-[#241113] flex items-center gap-2">
                   <Send className="w-4 h-4 text-[#7A2229]" />
                   <span>{t.telegramSectionTitle}</span>
                 </h3>
-                {telegramStatus && (
-                  <span
-                    className={`text-xs font-semibold ${
-                      telegramStatus.configured ? 'text-[#15803D]' : 'text-[#B45309]'
-                    }`}
-                  >
-                    {telegramStatus.configured ? t.telegramConfigured : t.telegramMissing}
-                  </span>
-                )}
+                <p className="text-xs text-[#6A4B4E]">{t.telegramSectionDesc}</p>
               </div>
-
-              <p className="text-xs text-[#6A4B4E] leading-relaxed">{t.telegramSectionDesc}</p>
-              <p className="text-[11px] font-mono-tabular text-[#927275]">
-                {t.telegramSecretsHint}
-              </p>
-
-              {telegramFeedback && (
-                <div
-                  className={`p-3 rounded-xl border text-xs ${
-                    telegramFeedback.ok
-                      ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]'
-                      : 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]'
-                  }`}
-                >
-                  {telegramFeedback.msg}
-                </div>
-              )}
-
               <button
                 type="button"
-                disabled={testingTelegram}
-                onClick={handleTestTelegram}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] disabled:opacity-50 whitespace-nowrap shrink-0 cursor-pointer"
+                onClick={() => setActiveTab('telegram')}
+                className="px-4 py-2 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] whitespace-nowrap shrink-0 cursor-pointer"
               >
-                <Send className="w-3.5 h-3.5" />
-                <span>{testingTelegram ? t.telegramSendingTest : t.telegramSendTest}</span>
+                {t.adminTabTelegram}
               </button>
             </div>
           </div>
@@ -1783,6 +1924,327 @@ export function AdminDashboard({
               <span>{savingCms ? 'Saving...' : t.saveCms}</span>
             </button>
           </form>
+        </div>
+      )}
+
+      {activeTab === 'telegram' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Live Status, Test Alert & Notification Rules */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-5">
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-[#241113] flex items-center gap-2">
+                    <Send className="w-4 h-4 text-[#7A2229]" />
+                    <span>{t.telegramSectionTitle}</span>
+                  </h3>
+                  <p className="mt-1 text-xs text-[#6A4B4E] leading-relaxed">
+                    {t.telegramSectionDesc}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {telegramStatus && (
+                    <span
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-lg border ${
+                        telegramStatus.configured && telegramStatus.botReachable !== false
+                          ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]'
+                          : telegramStatus.apiUnavailable
+                            ? 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]'
+                            : 'bg-[#FFFBEB] border-[#FDE68A] text-[#B45309]'
+                      }`}
+                    >
+                      {telegramStatus.configured && telegramStatus.botReachable !== false
+                        ? t.telegramConfigured
+                        : telegramStatus.apiUnavailable
+                          ? t.telegramApiOffline
+                          : t.telegramMissing}
+                    </span>
+                  )}
+                  <button
+                    type="button"
+                    disabled={checkingTelegram}
+                    onClick={fetchTelegramStatus}
+                    title={t.telegramRefreshStatus}
+                    className="p-2 rounded-lg border border-[#EBDADA] text-[#6A4B4E] hover:text-[#241113] hover:bg-[#FCF8F8] disabled:opacity-50 cursor-pointer"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${checkingTelegram ? 'animate-spin' : ''}`} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Secret Presence Checkmarks (never exposes actual secrets) */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <div className="text-[11px] text-[#6A4B4E]">TELEGRAM_BOT_TOKEN</div>
+                  <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold">
+                    {telegramStatus?.hasBotToken ? (
+                      <>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#15803D]" />
+                        <span className="text-[#15803D]">
+                          {lang === 'mm' ? 'ထည့်သွင်းပြီး' : 'Configured'}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <AlertTriangle className="w-3.5 h-3.5 text-[#B45309]" />
+                        <span className="text-[#B45309]">
+                          {lang === 'mm' ? 'မထည့်ရသေးပါ' : 'Missing'}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <div className="text-[11px] text-[#6A4B4E]">TELEGRAM_CHAT_ID</div>
+                  <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold">
+                    {telegramStatus?.hasChatId ? (
+                      <>
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#15803D]" />
+                        <span className="text-[#15803D]">
+                          {lang === 'mm' ? 'ထည့်သွင်းပြီး' : 'Configured'}
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <AlertTriangle className="w-3.5 h-3.5 text-[#B45309]" />
+                        <span className="text-[#B45309]">
+                          {lang === 'mm' ? 'မထည့်ရသေးပါ' : 'Missing'}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <div className="text-[11px] text-[#6A4B4E]">
+                    {lang === 'mm' ? 'ချိတ်ဆက်ထားသော Bot' : 'Active Bot Handle'}
+                  </div>
+                  <div className="mt-1 text-xs font-mono-tabular font-semibold text-[#241113] truncate">
+                    {telegramStatus?.botUsername
+                      ? `@${telegramStatus.botUsername}`
+                      : telegramStatus?.botError
+                        ? 'Error'
+                        : '—'}
+                  </div>
+                </div>
+              </div>
+
+              {telegramStatus?.botError && (
+                <div className="p-3 rounded-xl bg-[#FFF1F2] border border-[#FECDD3] text-xs text-[#BE123C]">
+                  {telegramStatus.botError}
+                </div>
+              )}
+
+              {telegramFeedback && (
+                <div
+                  className={`p-3 rounded-xl border text-xs ${
+                    telegramFeedback.ok
+                      ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]'
+                      : 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]'
+                  }`}
+                >
+                  {telegramFeedback.msg}
+                </div>
+              )}
+
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  disabled={testingTelegram}
+                  onClick={handleTestTelegram}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-50 whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{testingTelegram ? t.telegramSendingTest : t.telegramSendTest}</span>
+                </button>
+                <span className="text-[11px] text-[#6A4B4E]">{t.telegramSecretsHint}</span>
+              </div>
+            </div>
+
+            {/* Notification Rules & Message Formatting Preferences */}
+            <form
+              onSubmit={handleSaveTelegramSettings}
+              className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4"
+            >
+              <h3 className="font-display text-base font-bold text-[#241113]">
+                {t.telegramPrefsTitle}
+              </h3>
+
+              <label className="flex items-start justify-between gap-4 p-3.5 rounded-xl border border-[#EBDADA] bg-[#FCF8F8] cursor-pointer">
+                <div>
+                  <div className="text-xs font-semibold text-[#241113]">
+                    {t.telegramNotifyStatusLabel}
+                  </div>
+                  <div className="text-[11px] text-[#6A4B4E] mt-0.5">
+                    {t.telegramNotifyStatusDesc}
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={telegramSettings.notifyOnStatusChange}
+                  onChange={(e) =>
+                    setTelegramSettings((prev) => ({
+                      ...prev,
+                      notifyOnStatusChange: e.target.checked,
+                    }))
+                  }
+                  className="mt-0.5 h-4 w-4 accent-[#6B1D24] cursor-pointer"
+                />
+              </label>
+
+              <label className="flex items-start justify-between gap-4 p-3.5 rounded-xl border border-[#EBDADA] bg-[#FCF8F8] cursor-pointer">
+                <div>
+                  <div className="text-xs font-semibold text-[#241113]">
+                    {t.telegramIncludePhotoLabel}
+                  </div>
+                  <div className="text-[11px] text-[#6A4B4E] mt-0.5">
+                    {t.telegramIncludePhotoDesc}
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={telegramSettings.includeReceiptPhoto}
+                  onChange={(e) =>
+                    setTelegramSettings((prev) => ({
+                      ...prev,
+                      includeReceiptPhoto: e.target.checked,
+                    }))
+                  }
+                  className="mt-0.5 h-4 w-4 accent-[#6B1D24] cursor-pointer"
+                />
+              </label>
+
+              <div>
+                <label className="block text-xs font-semibold text-[#241113] mb-1">
+                  {t.telegramHeaderNoteLabel}
+                </label>
+                <input
+                  type="text"
+                  maxLength={120}
+                  value={telegramSettings.customHeaderNote}
+                  onChange={(e) =>
+                    setTelegramSettings((prev) => ({
+                      ...prev,
+                      customHeaderNote: e.target.value,
+                    }))
+                  }
+                  placeholder={t.telegramHeaderNotePlaceholder}
+                  className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-xs text-[#241113]"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={savingTelegramPrefs}
+                className="w-full h-10 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-50 inline-flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Check className="w-4 h-4" />
+                <span>{savingTelegramPrefs ? 'Saving...' : t.telegramSavePrefs}</span>
+              </button>
+            </form>
+          </div>
+
+          {/* Right Column: Setup Guide & Live Message Preview */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4">
+              <h3 className="font-display text-base font-bold text-[#241113]">
+                {t.telegramSetupGuideTitle}
+              </h3>
+
+              <ol className="space-y-3 text-xs text-[#6A4B4E] leading-relaxed">
+                <li className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <div className="font-semibold text-[#241113]">
+                    {lang === 'mm' ? '၁။ @BotFather ဖြင့် Bot ဖန်တီးပါ' : '1. Create a Bot via @BotFather'}
+                  </div>
+                  <p className="mt-1">
+                    {lang === 'mm'
+                      ? 'Telegram တွင် @BotFather ကို ရှာ၍ /newbot ရိုက်ထည့်ကာ Bot Token ကို ကူးယူပါ။ ထို့နောက် သင့် Bot ထံသို့ /start တစ်ချက်ပို့ထားပါ။'
+                      : 'Open @BotFather in Telegram, run /newbot, copy the token, and send /start to your new bot.'}
+                  </p>
+                </li>
+
+                <li className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
+                  <div className="font-semibold text-[#241113]">
+                    {lang === 'mm' ? '၂။ Chat ID ယူပါ' : '2. Get Your Telegram Chat ID'}
+                  </div>
+                  <p className="mt-1">
+                    {lang === 'mm'
+                      ? 'ကိုယ်ပိုင်အကောင့်သို့ ပို့လိုပါက @userinfobot ထံမှ Chat ID ကို ယူပါ။ Group ထဲသို့ ပို့လိုပါက Bot ကို Group ထဲ Add ပြီး Group ID (-100...) ကို အသုံးပြုပါ။'
+                      : 'Use @userinfobot for your personal chat ID, or add the bot to your shop Group/Channel and use its -100... chat ID.'}
+                  </p>
+                </li>
+
+                <li className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] space-y-2">
+                  <div className="font-semibold text-[#241113]">
+                    {lang === 'mm'
+                      ? '၃။ Environment Secrets ထဲ ထည့်သွင်းပါ'
+                      : '3. Add to Environment Variables'}
+                  </div>
+                  <p>
+                    {lang === 'mm'
+                      ? 'AI Studio Secrets (သို့) Vercel → Settings → Environment Variables ထဲတွင် အောက်ပါ Variable ၂ ခု ထည့်ပေးပါ:'
+                      : 'Add these two variables in AI Studio Secrets or Vercel → Settings → Environment Variables:'}
+                  </p>
+                  <div className="space-y-1.5 pt-1">
+                    {(['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'] as const).map((envKey) => (
+                      <div
+                        key={envKey}
+                        className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white border border-[#EBDADA]"
+                      >
+                        <code className="font-mono-tabular text-[11px] font-semibold text-[#6B1D24]">
+                          {envKey}
+                        </code>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(envKey);
+                            setCopiedEnvKey(envKey);
+                            setTimeout(() => setCopiedEnvKey(null), 1200);
+                          }}
+                          className="inline-flex items-center gap-1 text-[11px] text-[#6A4B4E] hover:text-[#241113] cursor-pointer"
+                        >
+                          {copiedEnvKey === envKey ? (
+                            <Check className="w-3 h-3 text-[#15803D]" />
+                          ) : (
+                            <Copy className="w-3 h-3" />
+                          )}
+                          <span>{copiedEnvKey === envKey ? t.copied : t.copy}</span>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </li>
+              </ol>
+            </div>
+
+            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-3">
+              <h3 className="font-display text-sm font-bold text-[#241113]">
+                {t.telegramPreviewTitle}
+              </h3>
+              <div className="p-4 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-xs font-mono-tabular text-[#241113] space-y-1.5 leading-relaxed">
+                {telegramSettings.customHeaderNote.trim() && (
+                  <div className="italic text-[#7A2229]">{telegramSettings.customHeaderNote}</div>
+                )}
+                <div className="font-bold">New Order · {settings.storeName}</div>
+                <div>Order: ORD-849210</div>
+                <div>Total: 45,000 MMK</div>
+                <div>Payment: KBZPay · Slip Last 4: #5829</div>
+                <div className="pt-1 text-[#6A4B4E]">
+                  Customer: Kyaw Zin (customer@gmail.com)
+                </div>
+                <div className="text-[#6A4B4E]">
+                  • 1x Gemini Plus 6 Months — 45,000 MMK
+                </div>
+                {telegramSettings.includeReceiptPhoto && (
+                  <div className="pt-1 text-[11px] text-[#15803D]">
+                    [Payment Receipt Screenshot Attached]
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

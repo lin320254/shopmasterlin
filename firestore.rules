@@ -251,6 +251,17 @@ service cloud.firestore {
         && data.grantedAt is timestamp;
     }
 
+    function isValidTelegramSettings(data) {
+      return data.keys().hasAll(['notifyOnStatusChange', 'includeReceiptPhoto', 'updatedAt'])
+        && data.keys().hasOnly([
+          'notifyOnStatusChange', 'includeReceiptPhoto', 'customHeaderNote', 'updatedAt'
+        ])
+        && data.notifyOnStatusChange is bool
+        && data.includeReceiptPhoto is bool
+        && (!('customHeaderNote' in data) || isValidOptionalString(data.customHeaderNote, 120))
+        && data.updatedAt is timestamp;
+    }
+
     // -------------------------------------------------------------------------
     // Collection Rules
     // -------------------------------------------------------------------------
@@ -389,6 +400,14 @@ service cloud.firestore {
       allow create: if isBootstrappedAdmin() && isValidId(adminUid) && isValidAdminMember(incoming(), adminUid) && incoming().grantedAt == request.time;
       allow update: if isBootstrappedAdmin() && isValidId(adminUid) && isValidAdminMember(incoming(), adminUid) && incoming().grantedAt == existing().grantedAt;
       allow delete: if isBootstrappedAdmin() && isValidId(adminUid);
+    }
+
+    match /admin_settings/{docId} {
+      allow get: if isAdmin() && isValidId(docId);
+      allow list: if isBootstrappedAdmin();
+      allow create: if isAdmin() && isValidId(docId) && isValidTelegramSettings(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isAdmin() && isValidId(docId) && isValidTelegramSettings(incoming()) && incoming().updatedAt == request.time;
+      allow delete: if isAdmin() && isValidId(docId);
     }
   }
 }

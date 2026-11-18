@@ -492,6 +492,8 @@ function StorefrontApp() {
       }
       if (code === 'auth/popup-blocked') {
         setAuthError(t.authPopupBlocked);
+      } else if (code === 'auth/unauthorized-domain') {
+        setAuthError(`${t.authUnauthorizedDomain} ${window.location.hostname}`);
       } else {
         setAuthError(`${t.authGenericError}${code ? ` (${code})` : ''}`);
       }

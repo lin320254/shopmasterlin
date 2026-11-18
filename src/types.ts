@@ -165,3 +165,10 @@ export interface ProductReview {
   updatedAt?: Timestamp;
 }
 
+export interface TelegramSettings {
+  notifyOnStatusChange: boolean;
+  includeReceiptPhoto: boolean;
+  customHeaderNote: string;
+  updatedAt?: Timestamp;
+}
+
