@@ -152,6 +152,10 @@ export const translations = {
     telegramSecretsHint: 'Configure TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID in your environment secrets.',
     adminSyncedMsg: 'Saved & synced live across the storefront.',
     adminSaveFailed: 'Could not save changes',
+    signingIn: 'Signing in...',
+    switchAccount: 'Switch Google Account',
+    authPopupBlocked: 'Sign-in popup was blocked by your browser. Please allow popups for this site and tap Sign In again.',
+    authGenericError: 'Google sign-in could not be completed. Please try again.',
   },
   mm: {
     navShop: 'ပစ္စည်းများ',
@@ -297,5 +301,9 @@ export const translations = {
     telegramSecretsHint: 'TELEGRAM_BOT_TOKEN နှင့် TELEGRAM_CHAT_ID တို့ကို Environment Secrets တွင် ထည့်သွင်းပါ။',
     adminSyncedMsg: 'သိမ်းဆည်းပြီး Website တစ်ခုလုံးသို့ Realtime Sync လုပ်ပြီးပါပြီ။',
     adminSaveFailed: 'ပြင်ဆင်မှု သိမ်းဆည်း၍ မရပါ',
+    signingIn: 'ဝင်ရောက်နေသည်...',
+    switchAccount: 'အခြား Google အကောင့်ဖြင့် ပြောင်းဝင်မည်',
+    authPopupBlocked: 'Browser မှ Sign-In Popup ကို ပိတ်ထားပါသည်။ Browser Setting တွင် Popup ခွင့်ပြုပြီး ထပ်မံနှိပ်ပေးပါ။',
+    authGenericError: 'Google အကောင့် ဝင်ရောက်၍မရပါ။ ထပ်မံကြိုးစားကြည့်ပါ။',
   },
 } as const;

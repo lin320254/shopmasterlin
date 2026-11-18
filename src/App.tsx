@@ -1,4 +1,4 @@
-import { Check, Copy, Tag } from 'lucide-react';
+import { AlertCircle, Check, Copy, Tag, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -7,7 +7,6 @@ import {
   doc,
   getDoc,
   onSnapshot,
-  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -59,6 +58,8 @@ function StorefrontApp() {
   const [authReady, setAuthReady] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isAdminDoc, setIsAdminDoc] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   const [storeSettings, setStoreSettings] = useState<StoreSettings>(DEFAULT_STORE_SETTINGS);
   const [hasStoreSettingsDoc, setHasStoreSettingsDoc] = useState<boolean | null>(null);
@@ -107,13 +108,13 @@ function StorefrontApp() {
   useEffect(() => {
     testConnection();
     const unsub = onAuthStateChanged(auth, async (nextUser) => {
-      setUser(nextUser);
       if (nextUser) {
+        let hasAdminDoc = false;
         try {
           const adminSnap = await getDoc(doc(db, 'admins', nextUser.uid));
-          setIsAdminDoc(adminSnap.exists());
+          hasAdminDoc = adminSnap.exists();
         } catch {
-          setIsAdminDoc(false);
+          hasAdminDoc = false;
         }
         // Ensure user profile doc exists for non-admin or regular tracking
         try {
@@ -135,8 +136,12 @@ function StorefrontApp() {
         } catch {
           // Non-fatal if user profile already exists or unverified
         }
+        setIsAdminDoc(hasAdminDoc);
+        setUser(nextUser);
+        setAuthError(null);
       } else {
         setIsAdminDoc(false);
+        setUser(null);
       }
       setAuthReady(true);
     });
@@ -223,24 +228,26 @@ function StorefrontApp() {
     return unsub;
   }, [authReady, isAdmin]);
 
-  // Listen to Orders (all if Admin, own userId if customer)
+  // Listen to Orders (all if Admin, own userId if customer; client-sorted to avoid composite index requirement)
   useEffect(() => {
     if (!authReady || !user) {
       setOrders([]);
       return;
     }
     const q = isAdmin
-      ? query(collection(db, 'orders'), orderBy('createdAt', 'desc'))
-      : query(
-          collection(db, 'orders'),
-          where('userId', '==', user.uid),
-          orderBy('createdAt', 'desc')
-        );
+      ? query(collection(db, 'orders'))
+      : query(collection(db, 'orders'), where('userId', '==', user.uid));
 
     const unsub = onSnapshot(
       q,
       (snap) => {
-        const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Order);
+        const list = snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }) as Order)
+          .sort(
+            (a, b) =>
+              (b.createdAt?.toMillis?.() ?? Date.now()) -
+              (a.createdAt?.toMillis?.() ?? Date.now())
+          );
         setOrders(list);
       },
       (err) => handleFirestoreError(err, OperationType.LIST, 'orders')
@@ -470,10 +477,26 @@ function StorefrontApp() {
   }, [selectedProduct, orders, user]);
 
   const handleSignIn = async () => {
+    if (signingIn) return;
+    setAuthError(null);
+    setSigningIn(true);
     try {
       await signInWithGoogle();
-    } catch {
-      // User closed popup
+    } catch (err) {
+      const code =
+        typeof err === 'object' && err !== null && 'code' in err
+          ? String((err as { code?: unknown }).code)
+          : '';
+      if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+        return;
+      }
+      if (code === 'auth/popup-blocked') {
+        setAuthError(t.authPopupBlocked);
+      } else {
+        setAuthError(`${t.authGenericError}${code ? ` (${code})` : ''}`);
+      }
+    } finally {
+      setSigningIn(false);
     }
   };
 
@@ -522,11 +545,30 @@ function StorefrontApp() {
         onOpenCart={() => setCartOpen(true)}
         user={user}
         isAdmin={isAdmin}
+        signingIn={signingIn}
         onSignIn={handleSignIn}
         onSignOut={signOutUser}
       />
 
       <main className="flex-1">
+        {authError && (
+          <div className="bg-[#FFF1F2] border-b border-[#FECDD3] px-4 py-3">
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs font-medium text-[#BE123C]">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{authError}</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setAuthError(null)}
+                aria-label="Dismiss sign-in error"
+                className="p-1 hover:opacity-75 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
         {activePage === 'shop' && (
           <>
             <HeroSection

@@ -170,11 +170,20 @@ export function AdminDashboard({
             {t.signInRequiredAdmin}
           </p>
           {user ? (
-            <p className="mt-4 text-xs text-[#BE123C]">
-              {lang === 'mm'
-                ? `လက်ရှိဝင်ထားသော အကောင့် (${user.email}) သည် Admin မဟုတ်ပါ။`
-                : `Signed in as ${user.email}, which does not have Admin permissions.`}
-            </p>
+            <div className="mt-4 space-y-4">
+              <p className="text-xs text-[#BE123C]">
+                {lang === 'mm'
+                  ? `လက်ရှိဝင်ထားသော အကောင့် (${user.email}) သည် Admin မဟုတ်ပါ။ Customer အနေဖြင့် အော်ဒါတင်ရန်နှင့် မှတ်တမ်းကြည့်ရန် အပြည့်အဝ အသုံးပြုနိုင်ပါသည်။`
+                  : `Signed in as ${user.email} (Customer account). Switch to the Admin Google account to access Admin Studio.`}
+              </p>
+              <button
+                type="button"
+                onClick={onSignIn}
+                className="px-5 py-2.5 rounded-xl bg-[#6B1D24] text-white text-xs sm:text-sm font-medium hover:bg-[#52141A] cursor-pointer"
+              >
+                {t.switchAccount}
+              </button>
+            </div>
           ) : (
             <button
               type="button"

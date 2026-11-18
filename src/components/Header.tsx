@@ -17,6 +17,7 @@ interface HeaderProps {
   onOpenCart: () => void;
   user: FirebaseUser | null;
   isAdmin: boolean;
+  signingIn?: boolean;
   onSignIn: () => void;
   onSignOut: () => void;
 }
@@ -32,6 +33,7 @@ export function Header({
   onOpenCart,
   user,
   isAdmin,
+  signingIn = false,
   onSignIn,
   onSignOut,
 }: HeaderProps) {
@@ -131,11 +133,11 @@ export function Header({
           </button>
 
           {user ? (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <button
                 type="button"
                 onClick={() => onNavigate(isAdmin ? 'admin' : 'orders')}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-[#241113] hover:bg-[#FCF8F8] transition-colors whitespace-nowrap shrink-0 cursor-pointer max-w-[140px]"
+                className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-1.5 rounded-lg border border-[#EBDADA] sm:border-transparent text-xs font-medium text-[#241113] hover:bg-[#FCF8F8] transition-colors whitespace-nowrap shrink-0 cursor-pointer max-w-[110px] sm:max-w-[150px]"
                 title={user.email || ''}
               >
                 <User className="w-3.5 h-3.5 text-[#7A2229] shrink-0" />
@@ -144,7 +146,7 @@ export function Header({
               <button
                 type="button"
                 onClick={onSignOut}
-                className="text-xs text-[#6A4B4E] hover:text-[#241113] px-2 py-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                className="hidden sm:inline-flex text-xs text-[#6A4B4E] hover:text-[#241113] px-2 py-1.5 whitespace-nowrap shrink-0 cursor-pointer"
               >
                 {t.signOut}
               </button>
@@ -152,11 +154,12 @@ export function Header({
           ) : (
             <button
               type="button"
+              disabled={signingIn}
               onClick={onSignIn}
-              className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#D8BEBE] text-xs font-medium text-[#241113] hover:bg-[#FCF8F8] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg border border-[#D8BEBE] text-xs font-medium text-[#241113] hover:bg-[#FCF8F8] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               <User className="w-3.5 h-3.5 text-[#7A2229]" />
-              <span>{t.signIn}</span>
+              <span>{signingIn ? t.signingIn : t.signIn}</span>
             </button>
           )}
 
@@ -237,10 +240,11 @@ export function Header({
             ) : (
               <button
                 type="button"
+                disabled={signingIn}
                 onClick={() => handleNavClick(onSignIn)}
-                className="w-full px-4 py-2.5 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-sm font-medium text-[#241113]"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-sm font-medium text-[#241113] disabled:opacity-60 cursor-pointer"
               >
-                {t.signIn}
+                {signingIn ? t.signingIn : t.signIn}
               </button>
             )}
           </div>
