@@ -535,7 +535,7 @@ function StorefrontApp() {
   const cartCount = syncedCart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#241113]">
+    <div className="min-h-screen flex flex-col bg-[#070709] text-[#F5F5F7]">
       <Header
         settings={storeSettings}
         lang={lang}
@@ -554,17 +554,17 @@ function StorefrontApp() {
 
       <main className="flex-1">
         {authError && (
-          <div className="bg-[#FFF1F2] border-b border-[#FECDD3] px-4 py-3">
-            <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs font-medium text-[#BE123C]">
+          <div className="bg-[#230B0F] border-b border-[#6E1721] px-4 py-3">
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 text-xs font-medium text-[#FF8A92]">
               <div className="flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+                <AlertCircle className="w-4 h-4 text-[#FF2A36] shrink-0" />
                 <span>{authError}</span>
               </div>
               <button
                 type="button"
                 onClick={() => setAuthError(null)}
                 aria-label="Dismiss sign-in error"
-                className="p-1 hover:opacity-75 cursor-pointer"
+                className="p-1 text-[#FF8A92] hover:text-white cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -584,31 +584,31 @@ function StorefrontApp() {
             {/* Featured Collection Catalog */}
             <section
               id="catalog-section"
-              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14"
             >
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7 sm:mb-8">
                 <div>
-                  <h2 className="font-display text-2xl font-bold text-[#241113]">
+                  <h2 className="font-display text-xl sm:text-2xl font-bold text-white">
                     {t.featuredCollection}
                   </h2>
-                  <p className="text-xs text-[#6A4B4E] mt-1">
+                  <p className="text-xs text-[#858594] mt-1">
                     {filteredCatalog.length}{' '}
                     {lang === 'mm' ? 'မျိုး ပြသထားပါသည်' : 'items available'}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 sm:gap-3">
                   {/* Category Filter Segmented Controls */}
-                  <div className="flex flex-wrap items-center gap-1 p-1 bg-[#FCF8F8] border border-[#EBDADA] rounded-xl">
+                  <div className="flex items-center gap-1 p-1 bg-[#111115] border border-[#24242C] rounded-xl overflow-x-auto no-scrollbar max-w-full">
                     {categories.map((cat) => (
                       <button
                         key={cat}
                         type="button"
                         onClick={() => setSelectedCategory(cat)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                           selectedCategory === cat
-                            ? 'bg-white text-[#241113] border border-[#EBDADA]'
-                            : 'text-[#6A4B4E] hover:text-[#241113]'
+                            ? 'bg-[#E50914] text-white'
+                            : 'text-[#B3B3BE] hover:text-white hover:bg-[#1A1A22]'
                         }`}
                       >
                         {cat === 'all' ? t.allCategories : cat}
@@ -622,7 +622,7 @@ function StorefrontApp() {
                     onChange={(e) =>
                       setSortBy(e.target.value as 'featured' | 'price_asc' | 'price_desc')
                     }
-                    className="h-9 px-3 rounded-xl bg-white border border-[#D8BEBE] text-xs font-medium text-[#241113] cursor-pointer"
+                    className="h-9 px-3 rounded-xl bg-[#111115] border border-[#2A2A34] text-xs font-medium text-white cursor-pointer shrink-0"
                   >
                     <option value="featured">{t.sortFeatured}</option>
                     <option value="price_asc">{t.sortPriceAsc}</option>
@@ -632,13 +632,13 @@ function StorefrontApp() {
               </div>
 
               {filteredCatalog.length === 0 ? (
-                <div className="bg-[#FCF8F8] border border-[#EBDADA] rounded-2xl p-12 text-center text-sm text-[#6A4B4E]">
+                <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-12 text-center text-sm text-[#B3B3BE]">
                   {lang === 'mm'
                     ? 'ရှာဖွေမှုနှင့် ကိုက်ညီသော ပစ္စည်း မတွေ့ရှိပါ။'
                     : 'No products match your search or category filter.'}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
                   {filteredCatalog.map((product) => {
                     const stats = reviewStatsByProduct.get(product.id);
                     return (
@@ -661,12 +661,12 @@ function StorefrontApp() {
             {displayPromotions.length > 0 && (
               <section
                 id="promotions-section"
-                className="bg-[#FCF8F8] border-y border-[#EBDADA] py-12"
+                className="bg-[#0B0B0F] border-y border-[#24242C] py-10 sm:py-12"
               >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="font-display text-xl font-bold text-[#241113] flex items-center gap-2">
-                      <Tag className="w-5 h-5 text-[#7A2229]" />
+                    <h2 className="font-display text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                      <Tag className="w-5 h-5 text-[#E50914]" />
                       <span>{t.activePromoBanner}</span>
                     </h2>
                   </div>
@@ -675,16 +675,16 @@ function StorefrontApp() {
                     {displayPromotions.map((promo) => (
                       <div
                         key={promo.id}
-                        className="bg-white border border-[#EBDADA] rounded-2xl p-5 flex items-center justify-between gap-4"
+                        className="bg-[#111115] border border-[#3D181C] rounded-2xl p-5 flex items-center justify-between gap-4 hover:border-[#E50914]/70 transition-colors"
                       >
-                        <div>
-                          <div className="font-mono-tabular text-base font-bold text-[#7A2229]">
+                        <div className="min-w-0">
+                          <div className="font-mono-tabular text-base font-bold text-[#FF2A36]">
                             {promo.code}
                           </div>
-                          <div className="text-sm font-medium text-[#241113] mt-0.5">
+                          <div className="text-sm font-medium text-white mt-0.5 truncate">
                             {lang === 'mm' ? promo.titleMm : promo.titleEn}
                           </div>
-                          <div className="text-xs text-[#6A4B4E] mt-1">
+                          <div className="text-xs text-[#858594] mt-1">
                             {t.minOrder}: {formatMmk(promo.minOrderMmk, lang)}
                           </div>
                         </div>
@@ -695,10 +695,10 @@ function StorefrontApp() {
                             setCopiedCode(promo.code);
                             setTimeout(() => setCopiedCode(null), 1400);
                           }}
-                          className="px-3.5 py-2 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+                          className="px-3.5 py-2 rounded-xl bg-[#180C0E] border border-[#471B20] text-xs font-semibold text-white hover:bg-[#E50914] hover:border-[#E50914] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
                         >
                           {copiedCode === promo.code ? (
-                            <Check className="w-3.5 h-3.5 text-[#15803D]" />
+                            <Check className="w-3.5 h-3.5 text-[#22C55E]" />
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
@@ -712,22 +712,22 @@ function StorefrontApp() {
             )}
 
             {/* How Ordering Works Section */}
-            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-              <h2 className="font-display text-xl font-bold text-[#241113] mb-6">
+            <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-14">
+              <h2 className="font-display text-lg sm:text-xl font-bold text-white mb-6">
                 {t.howItWorksTitle}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <h3 className="font-display text-sm font-bold text-[#7A2229]">{t.step1Title}</h3>
-                  <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed">{t.step1Desc}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#111115] border border-[#24242C] hover:border-[#3D181C] transition-colors">
+                  <h3 className="font-display text-sm font-bold text-[#FF2A36]">{t.step1Title}</h3>
+                  <p className="mt-2 text-sm text-[#B3B3BE] leading-relaxed">{t.step1Desc}</p>
                 </div>
-                <div className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <h3 className="font-display text-sm font-bold text-[#7A2229]">{t.step2Title}</h3>
-                  <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed">{t.step2Desc}</p>
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#111115] border border-[#24242C] hover:border-[#3D181C] transition-colors">
+                  <h3 className="font-display text-sm font-bold text-[#FF2A36]">{t.step2Title}</h3>
+                  <p className="mt-2 text-sm text-[#B3B3BE] leading-relaxed">{t.step2Desc}</p>
                 </div>
-                <div className="p-6 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <h3 className="font-display text-sm font-bold text-[#7A2229]">{t.step3Title}</h3>
-                  <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed">{t.step3Desc}</p>
+                <div className="p-5 sm:p-6 rounded-2xl bg-[#111115] border border-[#24242C] hover:border-[#3D181C] transition-colors">
+                  <h3 className="font-display text-sm font-bold text-[#FF2A36]">{t.step3Title}</h3>
+                  <p className="mt-2 text-sm text-[#B3B3BE] leading-relaxed">{t.step3Desc}</p>
                 </div>
               </div>
             </section>
@@ -768,17 +768,17 @@ function StorefrontApp() {
       </main>
 
       {/* Clean Minimal Footer */}
-      <footer className="bg-[#FCF8F8] border-t border-[#EBDADA] py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#6A4B4E]">
+      <footer className="bg-[#0B0B0F] border-t border-[#24242C] py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#858594]">
           <div>
-            <span className="font-display font-bold text-[#241113] mr-2">
+            <span className="font-display font-bold text-white mr-2">
               {storeSettings.storeName}
             </span>
             <span>
               {lang === 'mm' ? storeSettings.footerNoteMm : storeSettings.footerNoteEn}
             </span>
           </div>
-          <div className="flex flex-wrap items-center gap-4 font-mono-tabular">
+          <div className="flex flex-wrap items-center gap-4 font-mono-tabular text-[#B3B3BE]">
             {storeSettings.supportPhone && <span>Tel: {storeSettings.supportPhone}</span>}
             {storeSettings.supportTelegram && (
               <span>Telegram: {storeSettings.supportTelegram}</span>

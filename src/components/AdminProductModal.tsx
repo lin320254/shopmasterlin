@@ -148,15 +148,15 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-[#241113]/50 backdrop-blur-xs flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4"
       onClick={onClose}
     >
       <div
-        className="bg-white border border-[#EBDADA] rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden"
+        className="bg-[#111115] border border-[#2C2C36] rounded-2xl max-w-3xl w-full max-h-[92vh] flex flex-col overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.75)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-4 bg-[#FCF8F8] border-b border-[#EBDADA] flex items-center justify-between">
-          <h3 className="font-display text-lg font-bold text-[#241113]">
+        <div className="px-5 sm:px-6 py-4 bg-[#0C0C10] border-b border-[#24242C] flex items-center justify-between">
+          <h3 className="font-display text-lg font-bold text-white">
             {product
               ? lang === 'mm'
                 ? 'ပစ္စည်းအချက်အလက် ပြင်ဆင်ရန်'
@@ -168,17 +168,17 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg text-[#6A4B4E] hover:bg-white cursor-pointer"
+            className="p-1.5 rounded-lg text-[#B3B3BE] hover:bg-[#1C1C24] hover:text-white cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSave} className="p-6 overflow-y-auto space-y-5 text-sm">
+        <form onSubmit={handleSave} className="p-5 sm:p-6 overflow-y-auto space-y-5 text-sm">
           {/* Titles */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 Product Name (English) *
               </label>
               <input
@@ -186,11 +186,11 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                 required
                 value={titleEn}
                 onChange={(e) => setTitleEn(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 ပစ္စည်းအမည် (မြန်မာ) *
               </label>
               <input
@@ -198,7 +198,7 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                 required
                 value={titleMm}
                 onChange={(e) => setTitleMm(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white"
               />
             </div>
           </div>
@@ -206,35 +206,35 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
           {/* Brand, Category, Delivery Type */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">Brand *</label>
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">Brand *</label>
               <input
                 type="text"
                 required
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
                 placeholder="Apple / Adobe / Custom"
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">Category *</label>
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">Category *</label>
               <input
                 type="text"
                 required
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 placeholder="Smartphones, Digital Tools..."
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 Delivery Type
               </label>
               <select
                 value={deliveryType}
                 onChange={(e) => setDeliveryType(e.target.value as DeliveryType)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] bg-white text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl border border-[#2A2A34] bg-[#0C0C10] text-white"
               >
                 <option value="physical">Physical Shipping</option>
                 <option value="digital">Digital Key / Invite</option>
@@ -246,7 +246,7 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
           {/* Price, CompareAt, Stock */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 Base Price (MMK) *
               </label>
               <input
@@ -255,11 +255,11 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                 required
                 value={priceMmk}
                 onChange={(e) => setPriceMmk(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] font-mono-tabular text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] font-mono-tabular text-white"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 Original Price / Strikethrough (MMK)
               </label>
               <input
@@ -267,18 +267,18 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                 min={0}
                 value={compareAtMmk}
                 onChange={(e) => setCompareAtMmk(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] font-mono-tabular text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] font-mono-tabular text-white"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">Stock *</label>
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">Stock *</label>
               <input
                 type="number"
                 min={0}
                 required
                 value={stock}
                 onChange={(e) => setStock(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] font-mono-tabular text-[#241113]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] font-mono-tabular text-white"
               />
             </div>
           </div>
@@ -286,25 +286,25 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
           {/* Descriptions */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 Description (English)
               </label>
               <textarea
                 rows={3}
                 value={descriptionEn}
                 onChange={(e) => setDescriptionEn(e.target.value)}
-                className="w-full p-3 rounded-xl border border-[#D8BEBE] text-[#241113]"
+                className="w-full p-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 အသေးစိတ် ဖော်ပြချက် (မြန်မာ)
               </label>
               <textarea
                 rows={3}
                 value={descriptionMm}
                 onChange={(e) => setDescriptionMm(e.target.value)}
-                className="w-full p-3 rounded-xl border border-[#D8BEBE] text-[#241113]"
+                className="w-full p-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white"
               />
             </div>
           </div>
@@ -312,29 +312,29 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
           {/* Delivery Labels & Badges */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 Delivery Label (EN)
               </label>
               <input
                 type="text"
                 value={deliveryLabelEn}
                 onChange={(e) => setDeliveryLabelEn(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 ပေးပို့မှုပုံစံ (မြန်မာ)
               </label>
               <input
                 type="text"
                 value={deliveryLabelMm}
                 onChange={(e) => setDeliveryLabelMm(e.target.value)}
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 Highlight Note (EN, optional)
               </label>
               <input
@@ -342,11 +342,11 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                 value={badgeTextEn}
                 onChange={(e) => setBadgeTextEn(e.target.value)}
                 placeholder="Best Seller / New"
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886]"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[#6A4B4E] mb-1">
+              <label className="block text-xs font-medium text-[#B3B3BE] mb-1">
                 အထူးမှတ်ချက် (မြန်မာ, optional)
               </label>
               <input
@@ -354,19 +354,19 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                 value={badgeTextMm}
                 onChange={(e) => setBadgeTextMm(e.target.value)}
                 placeholder="ရောင်းအားကောင်း"
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE]"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886]"
               />
             </div>
           </div>
 
           {/* Image Upload & Preset Picker */}
-          <div className="p-4 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA] space-y-3">
+          <div className="p-4 rounded-2xl bg-[#0C0C10] border border-[#24242C] space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs font-semibold text-[#241113]">
+              <span className="text-xs font-semibold text-white">
                 {lang === 'mm' ? 'ပစ္စည်း ဓာတ်ပုံ' : 'Product Image'}
               </span>
-              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] cursor-pointer hover:bg-[#F7EEEE]">
-                <ImagePlus className="w-3.5 h-3.5" />
+              <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#180C0E] border border-[#471B20] text-xs font-medium text-white cursor-pointer hover:border-[#E50914]">
+                <ImagePlus className="w-3.5 h-3.5 text-[#E50914]" />
                 <span>{lang === 'mm' ? 'ပုံတင်ရန်' : 'Upload Photo'}</span>
                 <input
                   type="file"
@@ -376,12 +376,12 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                 />
               </label>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               {imageUrl && (
                 <img
                   src={imageUrl}
                   alt="Preview"
-                  className="w-24 h-18 rounded-xl object-cover border border-[#EBDADA] bg-white shrink-0"
+                  className="w-24 h-18 rounded-xl object-cover border border-[#24242C] bg-[#17171D] shrink-0"
                 />
               )}
               <div className="flex-1 space-y-2">
@@ -390,7 +390,7 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                   value={imageUrl}
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="Or paste image URL / select preset below"
-                  className="w-full h-9 px-3 rounded-lg bg-white border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-lg bg-[#17171D] border border-[#2A2A34] text-xs text-white placeholder:text-[#787886]"
                 />
                 <div className="flex flex-wrap gap-1.5">
                   {PRESET_IMAGES.map((preset) => (
@@ -398,7 +398,7 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                       key={preset.url}
                       type="button"
                       onClick={() => setImageUrl(preset.url)}
-                      className="px-2 py-1 rounded-md bg-white border border-[#EBDADA] text-[11px] text-[#6A4B4E] hover:border-[#7A2229] cursor-pointer"
+                      className="px-2 py-1 rounded-md bg-[#17171D] border border-[#2A2A34] text-[11px] text-[#B3B3BE] hover:border-[#E50914] hover:text-white cursor-pointer"
                     >
                       {preset.label}
                     </button>
@@ -409,9 +409,9 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
           </div>
 
           {/* Variants / Plans */}
-          <div className="p-4 rounded-2xl bg-[#FCF8F8] border border-[#EBDADA] space-y-3">
+          <div className="p-4 rounded-2xl bg-[#0C0C10] border border-[#24242C] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#241113]">
+              <span className="text-xs font-semibold text-white">
                 {lang === 'mm'
                   ? 'Plan / အရွယ်အစား ခွဲများ (Optional)'
                   : 'Plans / Variants (Optional, max 10)'}
@@ -419,7 +419,7 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
               <button
                 type="button"
                 onClick={addVariant}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#6B1D24] text-white text-xs font-medium cursor-pointer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>{lang === 'mm' ? 'Plan ထည့်ရန်' : 'Add Option'}</span>
@@ -429,28 +429,28 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
             {variants.map((v, idx) => (
               <div
                 key={v.id}
-                className="p-3 rounded-xl bg-white border border-[#EBDADA] grid grid-cols-1 sm:grid-cols-12 gap-2 items-center"
+                className="p-3 rounded-xl bg-[#111115] border border-[#24242C] grid grid-cols-1 sm:grid-cols-12 gap-2 items-center"
               >
                 <input
                   type="text"
                   value={v.labelEn}
                   onChange={(e) => updateVariant(idx, { labelEn: e.target.value })}
                   placeholder="Label EN (e.g. 6 Months)"
-                  className="sm:col-span-3 h-9 px-2.5 rounded-lg border border-[#D8BEBE] text-xs"
+                  className="sm:col-span-3 h-9 px-2.5 rounded-lg bg-[#0C0C10] border border-[#2A2A34] text-xs text-white"
                 />
                 <input
                   type="text"
                   value={v.labelMm}
                   onChange={(e) => updateVariant(idx, { labelMm: e.target.value })}
                   placeholder="Label MM (e.g. ၆ လ)"
-                  className="sm:col-span-3 h-9 px-2.5 rounded-lg border border-[#D8BEBE] text-xs"
+                  className="sm:col-span-3 h-9 px-2.5 rounded-lg bg-[#0C0C10] border border-[#2A2A34] text-xs text-white"
                 />
                 <input
                   type="number"
                   value={v.priceMmk}
                   onChange={(e) => updateVariant(idx, { priceMmk: Number(e.target.value) })}
                   placeholder="Price MMK"
-                  className="sm:col-span-2 h-9 px-2.5 rounded-lg border border-[#D8BEBE] font-mono-tabular text-xs"
+                  className="sm:col-span-2 h-9 px-2.5 rounded-lg bg-[#0C0C10] border border-[#2A2A34] font-mono-tabular text-xs text-white"
                 />
                 <input
                   type="number"
@@ -459,7 +459,7 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                     updateVariant(idx, { compareAtMmk: Number(e.target.value) })
                   }
                   placeholder="Old MMK"
-                  className="sm:col-span-2 h-9 px-2.5 rounded-lg border border-[#D8BEBE] font-mono-tabular text-xs"
+                  className="sm:col-span-2 h-9 px-2.5 rounded-lg bg-[#0C0C10] border border-[#2A2A34] font-mono-tabular text-xs text-white"
                 />
                 <div className="sm:col-span-2 flex items-center gap-1.5">
                   <input
@@ -467,12 +467,12 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
                     value={v.stock}
                     onChange={(e) => updateVariant(idx, { stock: Number(e.target.value) })}
                     placeholder="Stock"
-                    className="w-full h-9 px-2 rounded-lg border border-[#D8BEBE] font-mono-tabular text-xs"
+                    className="w-full h-9 px-2 rounded-lg bg-[#0C0C10] border border-[#2A2A34] font-mono-tabular text-xs text-white"
                   />
                   <button
                     type="button"
                     onClick={() => removeVariant(idx)}
-                    className="p-1.5 text-[#BE123C] hover:bg-[#FFF1F2] rounded-lg cursor-pointer"
+                    className="p-1.5 text-[#FF5C67] hover:bg-[#230B0F] rounded-lg cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -483,28 +483,28 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
 
           {/* Toggles */}
           <div className="flex flex-wrap gap-6">
-            <label className="inline-flex items-center gap-2 text-xs font-medium text-[#241113] cursor-pointer">
+            <label className="inline-flex items-center gap-2 text-xs font-medium text-white cursor-pointer">
               <input
                 type="checkbox"
                 checked={active}
                 onChange={(e) => setActive(e.target.checked)}
-                className="accent-[#6B1D24] w-4 h-4"
+                className="accent-[#E50914] w-4 h-4"
               />
               <span>{lang === 'mm' ? 'စတိုးတွင် ဖော်ပြမည် (Active)' : 'Visible in Storefront'}</span>
             </label>
-            <label className="inline-flex items-center gap-2 text-xs font-medium text-[#241113] cursor-pointer">
+            <label className="inline-flex items-center gap-2 text-xs font-medium text-white cursor-pointer">
               <input
                 type="checkbox"
                 checked={featured}
                 onChange={(e) => setFeatured(e.target.checked)}
-                className="accent-[#6B1D24] w-4 h-4"
+                className="accent-[#E50914] w-4 h-4"
               />
               <span>{lang === 'mm' ? 'အကြံပြုပစ္စည်း (Featured)' : 'Featured Item'}</span>
             </label>
           </div>
 
           {error && (
-            <div className="p-3 rounded-xl bg-[#FFF1F2] border border-[#FECDD3] text-xs text-[#BE123C]">
+            <div className="p-3 rounded-xl bg-[#230B0F] border border-[#6E1721] text-xs text-[#FF8A92]">
               {error}
             </div>
           )}
@@ -513,14 +513,14 @@ export function AdminProductModal({ product, lang, onClose, onSaved }: AdminProd
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6A4B4E] cursor-pointer"
+              className="px-4 py-2 rounded-xl border border-[#2A2A34] bg-[#17171D] text-xs font-medium text-[#B3B3BE] hover:text-white cursor-pointer"
             >
               {lang === 'mm' ? 'ပယ်ဖျက်မည်' : 'Cancel'}
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="px-5 py-2 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-50 cursor-pointer"
+              className="px-5 py-2 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 cursor-pointer"
             >
               {saving
                 ? lang === 'mm'

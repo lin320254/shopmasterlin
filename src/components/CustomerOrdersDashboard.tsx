@@ -50,15 +50,15 @@ export function CustomerOrdersDashboard({
 
   if (!user) {
     return (
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <div className="bg-white border border-[#EBDADA] rounded-2xl p-10">
-          <Package className="w-10 h-10 text-[#9A4D53] mx-auto mb-3" />
-          <h2 className="font-display text-2xl font-bold text-[#241113]">{t.myOrdersTitle}</h2>
-          <p className="mt-2 text-sm text-[#6A4B4E] max-w-md mx-auto">{t.signInToCheckout}</p>
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 text-center">
+        <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-8 sm:p-10">
+          <Package className="w-10 h-10 text-[#E50914] mx-auto mb-3" />
+          <h2 className="font-display text-2xl font-bold text-white">{t.myOrdersTitle}</h2>
+          <p className="mt-2 text-sm text-[#B3B3BE] max-w-md mx-auto">{t.signInToCheckout}</p>
           <button
             type="button"
             onClick={onSignIn}
-            className="mt-6 px-6 py-2.5 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] cursor-pointer"
+            className="mt-6 px-6 py-2.5 rounded-xl bg-[#E50914] text-white text-sm font-semibold hover:bg-[#C40812] shadow-[0_0_20px_rgba(229,9,20,0.28)] cursor-pointer"
           >
             {t.signIn}
           </button>
@@ -110,7 +110,7 @@ export function CustomerOrdersDashboard({
   const renderStatus = (status: OrderStatus) => {
     if (status === 'verified_delivered') {
       return (
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#15803D]">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#22C55E]">
           <CheckCircle2 className="w-4 h-4" />
           <span>{t.statusDelivered}</span>
         </span>
@@ -118,14 +118,14 @@ export function CustomerOrdersDashboard({
     }
     if (status === 'rejected') {
       return (
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#BE123C]">
+        <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#FF5C67]">
           <XCircle className="w-4 h-4" />
           <span>{t.statusRejected}</span>
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#B45309]">
+      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#F59E0B]">
         <Clock className="w-4 h-4" />
         <span>{t.statusPending}</span>
       </span>
@@ -133,13 +133,13 @@ export function CustomerOrdersDashboard({
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-7 sm:mb-8">
         <div>
-          <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#241113]">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-white">
             {t.myOrdersTitle}
           </h1>
-          <p className="mt-1.5 text-sm text-[#6A4B4E]">{t.myOrdersSubtitle}</p>
+          <p className="mt-1.5 text-sm text-[#B3B3BE]">{t.myOrdersSubtitle}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto">
           {deliveredCount > 0 && (
@@ -147,7 +147,7 @@ export function CustomerOrdersDashboard({
               type="button"
               onClick={handleDownloadSummary}
               disabled={generatingPdfId !== null}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
             >
               {generatingPdfId === 'summary' ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -162,7 +162,7 @@ export function CustomerOrdersDashboard({
           <button
             type="button"
             onClick={onBackToShop}
-            className="px-4 py-2 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] whitespace-nowrap shrink-0 cursor-pointer"
+            className="px-4 py-2 rounded-xl border border-[#2A2A34] bg-[#111115] text-xs font-medium text-white hover:border-[#E50914]/60 whitespace-nowrap shrink-0 cursor-pointer"
           >
             ← {t.backToShop}
           </button>
@@ -170,12 +170,12 @@ export function CustomerOrdersDashboard({
       </div>
 
       {pdfError && (
-        <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-[#FECDD3] bg-[#FFF1F2] px-4 py-3 text-xs font-medium text-[#BE123C]">
+        <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-[#6E1721] bg-[#230B0F] px-4 py-3 text-xs font-medium text-[#FF8A92]">
           <span>{pdfError}</span>
           <button
             type="button"
             onClick={() => setPdfError(null)}
-            className="p-0.5 text-[#BE123C] hover:opacity-75 cursor-pointer"
+            className="p-0.5 text-[#FF8A92] hover:text-white cursor-pointer"
             aria-label="Dismiss error"
           >
             <X className="w-4 h-4" />
@@ -184,35 +184,35 @@ export function CustomerOrdersDashboard({
       )}
 
       {/* KPI Summary Strip */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-          <div className="text-xs text-[#6A4B4E]">{t.totalOrders}</div>
-          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#241113]">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-7 sm:mb-8">
+        <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-4 sm:p-5">
+          <div className="text-xs text-[#858594]">{t.totalOrders}</div>
+          <div className="mt-1.5 font-mono-tabular text-xl sm:text-2xl font-bold text-white">
             {orders.length}
           </div>
         </div>
-        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-          <div className="text-xs text-[#6A4B4E]">{t.pendingCount}</div>
-          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#B45309]">
+        <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-4 sm:p-5">
+          <div className="text-xs text-[#858594]">{t.pendingCount}</div>
+          <div className="mt-1.5 font-mono-tabular text-xl sm:text-2xl font-bold text-[#F59E0B]">
             {pendingCount}
           </div>
         </div>
-        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-          <div className="text-xs text-[#6A4B4E]">{t.deliveredCount}</div>
-          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#15803D]">
+        <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-4 sm:p-5">
+          <div className="text-xs text-[#858594]">{t.deliveredCount}</div>
+          <div className="mt-1.5 font-mono-tabular text-xl sm:text-2xl font-bold text-[#22C55E]">
             {deliveredCount}
           </div>
         </div>
-        <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-          <div className="text-xs text-[#6A4B4E]">{t.totalSpent}</div>
-          <div className="mt-1.5 font-mono-tabular text-2xl font-bold text-[#7A2229]">
+        <div className="bg-[#111115] border border-[#3D181C] rounded-2xl p-4 sm:p-5">
+          <div className="text-xs text-[#858594]">{t.totalSpent}</div>
+          <div className="mt-1.5 font-mono-tabular text-xl sm:text-2xl font-bold text-[#FF2A36]">
             {formatMmk(totalSpent, lang)}
           </div>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="inline-flex flex-wrap items-center gap-1 p-1 bg-[#FCF8F8] border border-[#EBDADA] rounded-xl mb-6">
+      <div className="inline-flex items-center gap-1 p-1 bg-[#111115] border border-[#24242C] rounded-xl mb-6 overflow-x-auto no-scrollbar max-w-full">
         {(
           [
             { key: 'all', label: t.filterAll },
@@ -225,10 +225,10 @@ export function CustomerOrdersDashboard({
             key={tab.key}
             type="button"
             onClick={() => setFilter(tab.key)}
-            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               filter === tab.key
-                ? 'bg-white text-[#241113] border border-[#EBDADA]'
-                : 'text-[#6A4B4E] hover:text-[#241113]'
+                ? 'bg-[#E50914] text-white'
+                : 'text-[#B3B3BE] hover:text-white'
             }`}
           >
             {tab.label}
@@ -238,10 +238,10 @@ export function CustomerOrdersDashboard({
 
       {/* Orders List */}
       {filteredOrders.length === 0 ? (
-        <div className="bg-white border border-[#EBDADA] rounded-2xl p-12 text-center">
-          <Package className="w-10 h-10 text-[#CCA9A9] mx-auto mb-3" />
-          <h3 className="font-display text-base font-semibold text-[#241113]">{t.noOrdersYet}</h3>
-          <p className="mt-1 text-sm text-[#6A4B4E]">{t.noOrdersDesc}</p>
+        <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-12 text-center">
+          <Package className="w-10 h-10 text-[#454554] mx-auto mb-3" />
+          <h3 className="font-display text-base font-semibold text-white">{t.noOrdersYet}</h3>
+          <p className="mt-1 text-sm text-[#B3B3BE]">{t.noOrdersDesc}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -252,12 +252,12 @@ export function CustomerOrdersDashboard({
             return (
               <article
                 key={order.id}
-                className="bg-white border border-[#EBDADA] rounded-2xl p-5 sm:p-6 space-y-4"
+                className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-4"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F7EEEE]">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#202028]">
                   <div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#6A4B4E]">
-                      <span className="font-mono-tabular font-semibold text-[#241113] text-sm">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-[#858594]">
+                      <span className="font-mono-tabular font-semibold text-white text-sm">
                         {order.orderNumber}
                       </span>
                       <span aria-hidden="true">·</span>
@@ -265,14 +265,14 @@ export function CustomerOrdersDashboard({
                       <span aria-hidden="true">·</span>
                       <span>{order.paymentMethodName}</span>
                       <span aria-hidden="true">·</span>
-                      <span className="font-mono-tabular">
+                      <span className="font-mono-tabular text-[#D4D4DE]">
                         Slip #{order.receiptLast4}
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-between sm:justify-end gap-4">
                     {renderStatus(order.status)}
-                    <span className="font-mono-tabular text-base font-bold text-[#241113]">
+                    <span className="font-mono-tabular text-base font-bold text-white">
                       {formatMmk(order.totalMmk, lang)}
                     </span>
                   </div>
@@ -288,14 +288,14 @@ export function CustomerOrdersDashboard({
                           key={`${item.productId}_${idx}`}
                           className="flex flex-wrap items-center justify-between gap-2 text-sm"
                         >
-                          <div className="text-[#241113] min-w-0">
-                            <span className="font-mono-tabular text-xs text-[#9A4D53] mr-2">
+                          <div className="text-white min-w-0">
+                            <span className="font-mono-tabular text-xs text-[#FF4D57] mr-2">
                               {item.quantity}x
                             </span>
                             <span className="font-medium">
                               {lang === 'mm' ? item.titleMm : item.titleEn}
                             </span>
-                            <span className="text-xs text-[#6A4B4E] ml-1.5">
+                            <span className="text-xs text-[#858594] ml-1.5">
                               ({lang === 'mm' ? item.variantLabelMm : item.variantLabelEn})
                             </span>
                           </div>
@@ -304,43 +304,43 @@ export function CustomerOrdersDashboard({
                               <button
                                 type="button"
                                 onClick={() => onReviewProduct(item.productId)}
-                                className="inline-flex items-center gap-1 text-xs font-medium text-[#7A2229] hover:underline whitespace-nowrap cursor-pointer"
+                                className="inline-flex items-center gap-1 text-xs font-medium text-[#FF4D57] hover:underline whitespace-nowrap cursor-pointer"
                               >
                                 <Star
                                   className={`w-3.5 h-3.5 ${
                                     alreadyReviewed
-                                      ? 'fill-[#7A2229] text-[#7A2229]'
-                                      : 'text-[#9A4D53]'
+                                      ? 'fill-[#E50914] text-[#E50914]'
+                                      : 'text-[#FF4D57]'
                                   }`}
                                 />
                                 <span>{alreadyReviewed ? t.editReview : t.writeReview}</span>
                               </button>
                             )}
-                            <span className="font-mono-tabular text-xs font-medium text-[#6A4B4E]">
+                            <span className="font-mono-tabular text-xs font-medium text-[#B3B3BE]">
                               {formatMmk(item.unitPriceMmk * item.quantity, lang)}
                             </span>
                           </div>
                         </div>
                       );
                     })}
-                    <div className="pt-2 text-xs text-[#6A4B4E]">
+                    <div className="pt-2 text-xs text-[#858594]">
                       {t.deliveryContactLabel}:{' '}
-                      <span className="text-[#241113] font-medium">{order.deliveryContact}</span>
+                      <span className="text-white font-medium">{order.deliveryContact}</span>
                     </div>
                   </div>
 
                   {/* Delivery Output & Receipt Preview */}
                   <div className="lg:col-span-5 flex flex-col gap-3">
                     {order.status === 'verified_delivered' && order.deliveryPayload && (
-                      <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0]">
+                      <div className="p-3.5 rounded-xl bg-[#0D2618] border border-[#166534]">
                         <div className="flex items-center justify-between gap-2 mb-1.5">
-                          <span className="text-xs font-semibold text-[#15803D]">
+                          <span className="text-xs font-semibold text-[#22C55E]">
                             {t.deliveredOutputLabel}
                           </span>
                           <button
                             type="button"
                             onClick={() => handleCopyPayload(order.id, order.deliveryPayload)}
-                            className="inline-flex items-center gap-1 text-xs font-medium text-[#15803D] hover:underline cursor-pointer"
+                            className="inline-flex items-center gap-1 text-xs font-medium text-[#4ADE80] hover:underline cursor-pointer"
                           >
                             {copiedOrderId === order.id ? (
                               <Check className="w-3.5 h-3.5" />
@@ -350,15 +350,15 @@ export function CustomerOrdersDashboard({
                             <span>{copiedOrderId === order.id ? t.copied : t.copy}</span>
                           </button>
                         </div>
-                        <pre className="text-xs font-mono-tabular text-[#14532D] whitespace-pre-wrap break-all">
+                        <pre className="text-xs font-mono-tabular text-[#DCFCE7] whitespace-pre-wrap break-all">
                           {order.deliveryPayload}
                         </pre>
                       </div>
                     )}
 
                     {order.adminNote && (
-                      <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-xs text-[#6A4B4E]">
-                        <span className="font-semibold text-[#241113]">{t.adminNoteLabel}: </span>
+                      <div className="p-3 rounded-xl bg-[#0C0C10] border border-[#24242C] text-xs text-[#B3B3BE]">
+                        <span className="font-semibold text-white">{t.adminNoteLabel}: </span>
                         {order.adminNote}
                       </div>
                     )}
@@ -369,7 +369,7 @@ export function CustomerOrdersDashboard({
                           type="button"
                           onClick={() => handleDownloadInvoice(order)}
                           disabled={generatingPdfId !== null}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#6B1D24] text-xs font-medium text-white hover:bg-[#52141A] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E50914] text-xs font-semibold text-white hover:bg-[#C40812] disabled:opacity-60 transition-colors whitespace-nowrap shrink-0 cursor-pointer"
                         >
                           {generatingPdfId === order.id ? (
                             <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -386,9 +386,9 @@ export function CustomerOrdersDashboard({
                         <button
                           type="button"
                           onClick={() => setLightboxImage(order.receiptImageDataUrl)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] hover:bg-[#FCF8F8] whitespace-nowrap shrink-0 cursor-pointer"
+                          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#3D181C] bg-[#180C0E] text-xs font-medium text-white hover:border-[#E50914] whitespace-nowrap shrink-0 cursor-pointer"
                         >
-                          <Eye className="w-3.5 h-3.5" />
+                          <Eye className="w-3.5 h-3.5 text-[#FF4D57]" />
                           <span>{t.viewReceipt}</span>
                         </button>
                       )}
@@ -404,18 +404,18 @@ export function CustomerOrdersDashboard({
       {/* Receipt Lightbox */}
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-50 bg-[#241113]/75 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/85 flex items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
         >
           <div
-            className="bg-white rounded-2xl p-4 max-w-md w-full"
+            className="bg-[#111115] border border-[#2C2C36] rounded-2xl p-4 max-w-md w-full"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end mb-2">
               <button
                 type="button"
                 onClick={() => setLightboxImage(null)}
-                className="p-1 text-[#6A4B4E] cursor-pointer"
+                className="p-1 text-[#B3B3BE] hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -423,7 +423,7 @@ export function CustomerOrdersDashboard({
             <img
               src={lightboxImage}
               alt="Payment receipt"
-              className="w-full max-h-[75vh] object-contain rounded-xl"
+              className="w-full max-h-[75vh] object-contain rounded-xl bg-[#070709]"
             />
           </div>
         </div>

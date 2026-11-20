@@ -221,16 +221,16 @@ export function AdminDashboard({
 
   if (!user || !isAdmin) {
     return (
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-        <div className="bg-white border border-[#EBDADA] rounded-2xl p-10">
-          <ShieldCheck className="w-11 h-11 text-[#7A2229] mx-auto mb-3" />
-          <h2 className="font-display text-2xl font-bold text-[#241113]">{t.adminTitle}</h2>
-          <p className="mt-2 text-sm text-[#6A4B4E] max-w-md mx-auto">
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-16 text-center">
+        <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-8 sm:p-10 shadow-2xl">
+          <ShieldCheck className="w-11 h-11 text-[#E50914] mx-auto mb-3" />
+          <h2 className="font-display text-2xl font-bold text-white">{t.adminTitle}</h2>
+          <p className="mt-2 text-sm text-[#B3B3BE] max-w-md mx-auto leading-relaxed">
             {t.signInRequiredAdmin}
           </p>
           {user ? (
             <div className="mt-4 space-y-4">
-              <p className="text-xs text-[#BE123C]">
+              <p className="text-xs text-[#FF8A92] leading-relaxed">
                 {lang === 'mm'
                   ? `လက်ရှိဝင်ထားသော အကောင့် (${user.email}) သည် Admin မဟုတ်ပါ။ Customer အနေဖြင့် အော်ဒါတင်ရန်နှင့် မှတ်တမ်းကြည့်ရန် အပြည့်အဝ အသုံးပြုနိုင်ပါသည်။`
                   : `Signed in as ${user.email} (Customer account). Switch to the Admin Google account to access Admin Studio.`}
@@ -238,7 +238,7 @@ export function AdminDashboard({
               <button
                 type="button"
                 onClick={onSignIn}
-                className="px-5 py-2.5 rounded-xl bg-[#6B1D24] text-white text-xs sm:text-sm font-medium hover:bg-[#52141A] cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-[#E50914] text-white text-xs sm:text-sm font-semibold hover:bg-[#C40812] shadow-[0_6px_20px_-4px_rgba(229,9,20,0.45)] transition-colors cursor-pointer"
               >
                 {t.switchAccount}
               </button>
@@ -247,7 +247,7 @@ export function AdminDashboard({
             <button
               type="button"
               onClick={onSignIn}
-              className="mt-6 px-6 py-2.5 rounded-xl bg-[#6B1D24] text-white text-sm font-medium hover:bg-[#52141A] cursor-pointer"
+              className="mt-6 px-6 py-2.5 rounded-xl bg-[#E50914] text-white text-sm font-semibold hover:bg-[#C40812] shadow-[0_6px_20px_-4px_rgba(229,9,20,0.45)] transition-colors cursor-pointer"
             >
               {t.signIn}
             </button>
@@ -731,21 +731,21 @@ export function AdminDashboard({
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
         <div>
-          <div className="text-xs font-medium text-[#9A4D53]">
+          <div className="text-xs font-semibold text-[#FF4D57] tracking-wide">
             Admin · {user.email}
           </div>
-          <h1 className="font-display text-2xl sm:text-3xl font-bold text-[#241113] mt-1">
+          <h1 className="font-display text-2xl sm:text-3xl font-bold text-white mt-1">
             {t.adminTitle}
           </h1>
-          <p className="mt-1 text-sm text-[#6A4B4E]">{t.adminSubtitle}</p>
+          <p className="mt-1 text-sm text-[#B3B3BE]">{t.adminSubtitle}</p>
         </div>
 
         {adminNotice && (
           <div
             className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-semibold ${
               adminNotice.ok
-                ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]'
-                : 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]'
+                ? 'bg-[#0D2618] border-[#166534] text-[#22C55E]'
+                : 'bg-[#230B0F] border-[#6E1721] text-[#FF8A92]'
             }`}
           >
             {adminNotice.ok ? (
@@ -766,7 +766,7 @@ export function AdminDashboard({
         )}
       </div>
 
-      <div className="flex overflow-x-auto gap-1.5 p-1.5 bg-[#FCF8F8] border border-[#EBDADA] rounded-2xl mb-8">
+      <div className="flex overflow-x-auto no-scrollbar gap-1.5 p-1.5 bg-[#0C0C10] border border-[#24242C] rounded-2xl mb-8">
         {(
           [
             { id: 'analytics', label: t.adminTabAnalytics, icon: BarChart3 },
@@ -788,10 +788,10 @@ export function AdminDashboard({
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                 active
-                  ? 'bg-[#6B1D24] text-white'
-                  : 'text-[#6A4B4E] hover:text-[#241113] hover:bg-white'
+                  ? 'bg-[#E50914] text-white shadow-[0_4px_14px_-2px_rgba(229,9,20,0.45)]'
+                  : 'text-[#B3B3BE] hover:text-white hover:bg-[#17171D]'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -802,56 +802,56 @@ export function AdminDashboard({
       </div>
 
       {activeTab === 'analytics' && (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-              <div className="text-xs text-[#6A4B4E]">{t.verifiedRevenue}</div>
-              <div className="mt-2 font-mono-tabular text-2xl font-bold text-[#241113]">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5">
+              <div className="text-xs text-[#858594]">{t.verifiedRevenue}</div>
+              <div className="mt-2 font-mono-tabular text-2xl font-bold text-white">
                 {formatMmk(verifiedRevenue, lang)}
               </div>
-              <div className="mt-1 text-xs text-[#15803D]">
+              <div className="mt-1 text-xs text-[#22C55E]">
                 {verifiedOrders.length} {lang === 'mm' ? 'ခု အတည်ပြုပြီး' : 'completed orders'}
               </div>
             </div>
 
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-              <div className="text-xs text-[#6A4B4E]">{t.pendingQueueValue}</div>
-              <div className="mt-2 font-mono-tabular text-2xl font-bold text-[#B45309]">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5">
+              <div className="text-xs text-[#858594]">{t.pendingQueueValue}</div>
+              <div className="mt-2 font-mono-tabular text-2xl font-bold text-[#F59E0B]">
                 {formatMmk(pendingValue, lang)}
               </div>
-              <div className="mt-1 text-xs text-[#6A4B4E]">
+              <div className="mt-1 text-xs text-[#B3B3BE]">
                 {pendingOrders.length} {lang === 'mm' ? 'ခု စိစစ်ရန်ကျန်' : 'awaiting review'}
               </div>
             </div>
 
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-              <div className="text-xs text-[#6A4B4E]">{t.approvalRate}</div>
-              <div className="mt-2 font-mono-tabular text-2xl font-bold text-[#7A2229]">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5">
+              <div className="text-xs text-[#858594]">{t.approvalRate}</div>
+              <div className="mt-2 font-mono-tabular text-2xl font-bold text-[#FF4D57]">
                 {approvalRate}%
               </div>
-              <div className="mt-1 text-xs text-[#6A4B4E]">
+              <div className="mt-1 text-xs text-[#B3B3BE]">
                 {rejectedOrders.length} {lang === 'mm' ? 'ခု ငြင်းပယ်ခဲ့သည်' : 'rejected'}
               </div>
             </div>
 
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-5">
-              <div className="text-xs text-[#6A4B4E]">{t.lowStockAlerts}</div>
-              <div className="mt-2 font-mono-tabular text-2xl font-bold text-[#241113]">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5">
+              <div className="text-xs text-[#858594]">{t.lowStockAlerts}</div>
+              <div className="mt-2 font-mono-tabular text-2xl font-bold text-white">
                 {lowStockProducts.length}
               </div>
-              <div className="mt-1 text-xs text-[#9A4D53]">
+              <div className="mt-1 text-xs text-[#FF4D57]">
                 {lang === 'mm' ? 'လက်ကျန် <= 5 ခုအောက်' : 'Items with stock <= 5'}
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-6 bg-white border border-[#EBDADA] rounded-2xl p-6">
-              <h3 className="font-display text-base font-bold text-[#241113] mb-4">
+            <div className="lg:col-span-6 bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6">
+              <h3 className="font-display text-base font-bold text-white mb-4">
                 {t.revenueByChannel}
               </h3>
               {channelStats.length === 0 ? (
-                <p className="text-sm text-[#6A4B4E]">
+                <p className="text-sm text-[#B3B3BE]">
                   {lang === 'mm'
                     ? 'အတည်ပြုပြီးသော အော်ဒါများ ပေါ်လာသည်နှင့် ငွေလွဲနည်းလမ်းအလိုက် ဇယားပြသပါမည်။'
                     : 'Channel share bars appear as orders are verified.'}
@@ -863,16 +863,16 @@ export function AdminDashboard({
                     return (
                       <div key={channel}>
                         <div className="flex justify-between text-xs mb-1.5">
-                          <span className="font-medium text-[#241113]">
+                          <span className="font-medium text-white">
                             {channel} ({stats.count})
                           </span>
-                          <span className="font-mono-tabular font-semibold text-[#7A2229]">
+                          <span className="font-mono-tabular font-semibold text-[#FF4D57]">
                             {formatMmk(stats.revenue, lang)}
                           </span>
                         </div>
-                        <div className="h-2.5 w-full bg-[#FCF8F8] rounded-full overflow-hidden border border-[#EBDADA]">
+                        <div className="h-2.5 w-full bg-[#0C0C10] rounded-full overflow-hidden border border-[#24242C]">
                           <div
-                            className="h-full bg-[#7A2229] rounded-full"
+                            className="h-full bg-[#E50914] rounded-full"
                             style={{ width: `${widthPct}%` }}
                           />
                         </div>
@@ -883,31 +883,31 @@ export function AdminDashboard({
               )}
             </div>
 
-            <div className="lg:col-span-6 bg-white border border-[#EBDADA] rounded-2xl p-6">
-              <h3 className="font-display text-base font-bold text-[#241113] mb-4">
+            <div className="lg:col-span-6 bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6">
+              <h3 className="font-display text-base font-bold text-white mb-4">
                 {t.topProducts}
               </h3>
               {topProducts.length === 0 ? (
-                <p className="text-sm text-[#6A4B4E]">
+                <p className="text-sm text-[#B3B3BE]">
                   {lang === 'mm'
                     ? 'ရောင်းချပြီးသော ပစ္စည်းစာရင်း မရှိသေးပါ။'
                     : 'No verified product sales recorded yet.'}
                 </p>
               ) : (
-                <div className="divide-y divide-[#F7EEEE]">
+                <div className="divide-y divide-[#24242C]">
                   {topProducts.map((p, i) => (
                     <div key={i} className="py-2.5 flex items-center justify-between gap-3 text-sm">
                       <div className="truncate">
-                        <span className="font-mono-tabular text-xs text-[#9A4D53] mr-2">
+                        <span className="font-mono-tabular text-xs text-[#FF4D57] mr-2">
                           0{i + 1}.
                         </span>
-                        <span className="font-medium text-[#241113]">{p.title}</span>
+                        <span className="font-medium text-white">{p.title}</span>
                       </div>
                       <div className="text-right shrink-0">
-                        <div className="font-mono-tabular text-xs font-semibold text-[#241113]">
+                        <div className="font-mono-tabular text-xs font-semibold text-white">
                           {formatMmk(p.revenue, lang)}
                         </div>
-                        <div className="text-[11px] text-[#6A4B4E]">{p.units} sold</div>
+                        <div className="text-[11px] text-[#858594]">{p.units} sold</div>
                       </div>
                     </div>
                   ))}
@@ -917,9 +917,9 @@ export function AdminDashboard({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-7 bg-white border border-[#EBDADA] rounded-2xl p-6">
+            <div className="lg:col-span-7 bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display text-base font-bold text-[#241113]">
+                <h3 className="font-display text-base font-bold text-white">
                   {t.pendingActions}
                 </h3>
                 <button
@@ -928,32 +928,32 @@ export function AdminDashboard({
                     setActiveTab('orders');
                     setOrderFilter('pending_verification');
                   }}
-                  className="text-xs font-medium text-[#7A2229] hover:underline cursor-pointer"
+                  className="text-xs font-semibold text-[#FF4D57] hover:underline cursor-pointer"
                 >
                   {lang === 'mm' ? 'အားလုံးကြည့်ရန်' : 'Open Queue →'}
                 </button>
               </div>
               {pendingOrders.length === 0 ? (
-                <p className="text-sm text-[#6A4B4E]">
+                <p className="text-sm text-[#B3B3BE]">
                   {lang === 'mm' ? 'စိစစ်ရန် ကျန်ရှိနေသော အော်ဒါမရှိပါ။' : 'All payment receipts are verified.'}
                 </p>
               ) : (
-                <div className="divide-y divide-[#F7EEEE]">
+                <div className="divide-y divide-[#24242C]">
                   {pendingOrders.slice(0, 5).map((ord) => (
                     <div
                       key={ord.id}
                       className="py-3 flex items-center justify-between gap-3 text-sm"
                     >
                       <div className="min-w-0">
-                        <div className="font-mono-tabular text-xs font-semibold text-[#241113]">
+                        <div className="font-mono-tabular text-xs font-semibold text-white">
                           {ord.orderNumber} · Slip #{ord.receiptLast4}
                         </div>
-                        <div className="text-xs text-[#6A4B4E] truncate">
+                        <div className="text-xs text-[#B3B3BE] truncate">
                           {ord.customerName} · {ord.paymentMethodName}
                         </div>
                       </div>
                       <div className="flex items-center gap-3 shrink-0">
-                        <span className="font-mono-tabular text-xs font-bold text-[#7A2229]">
+                        <span className="font-mono-tabular text-xs font-bold text-[#FF4D57]">
                           {formatMmk(ord.totalMmk, lang)}
                         </span>
                         <button
@@ -962,7 +962,7 @@ export function AdminDashboard({
                             setActiveTab('orders');
                             setSelectedOrderId(ord.id);
                           }}
-                          className="px-3 py-1.5 rounded-lg bg-[#6B1D24] text-white text-xs font-medium cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg bg-[#E50914] hover:bg-[#C40812] text-white text-xs font-semibold transition-colors cursor-pointer"
                         >
                           {lang === 'mm' ? 'စစ်ဆေးမည်' : 'Verify'}
                         </button>
@@ -973,17 +973,17 @@ export function AdminDashboard({
               )}
             </div>
 
-            <div className="lg:col-span-5 bg-white border border-[#EBDADA] rounded-2xl p-6">
-              <h3 className="font-display text-base font-bold text-[#241113] mb-4 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-[#B45309]" />
+            <div className="lg:col-span-5 bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6">
+              <h3 className="font-display text-base font-bold text-white mb-4 flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 text-[#F59E0B]" />
                 <span>{t.lowStockAlerts}</span>
               </h3>
               {lowStockProducts.length === 0 ? (
-                <p className="text-sm text-[#6A4B4E]">
+                <p className="text-sm text-[#B3B3BE]">
                   {lang === 'mm' ? 'ပစ္စည်းလက်ကျန်အားလုံး လုံလောက်မှုရှိပါသည်။' : 'All inventory levels healthy.'}
                 </p>
               ) : (
-                <div className="divide-y divide-[#F7EEEE]">
+                <div className="divide-y divide-[#24242C]">
                   {lowStockProducts.map((p) => {
                     const total =
                       p.variants.length > 0
@@ -991,7 +991,7 @@ export function AdminDashboard({
                         : p.stock;
                     return (
                       <div key={p.id} className="py-2.5 flex items-center justify-between gap-2 text-xs">
-                        <span className="font-medium text-[#241113] truncate">
+                        <span className="font-medium text-white truncate">
                           {lang === 'mm' ? p.titleMm : p.titleEn}
                         </span>
                         <button
@@ -1000,7 +1000,7 @@ export function AdminDashboard({
                             setEditingProduct(p);
                             setProductModalOpen(true);
                           }}
-                          className="font-mono-tabular font-semibold text-[#B45309] hover:underline shrink-0 cursor-pointer"
+                          className="font-mono-tabular font-semibold text-[#F59E0B] hover:underline shrink-0 cursor-pointer"
                         >
                           {total} left · Restock
                         </button>
@@ -1017,7 +1017,7 @@ export function AdminDashboard({
       {activeTab === 'orders' && (
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row gap-3 justify-between">
-            <div className="inline-flex flex-wrap gap-1 p-1 bg-[#FCF8F8] border border-[#EBDADA] rounded-xl">
+            <div className="flex overflow-x-auto no-scrollbar gap-1 p-1 bg-[#0C0C10] border border-[#24242C] rounded-xl">
               {(
                 [
                   { id: 'all', label: t.filterAll },
@@ -1030,10 +1030,10 @@ export function AdminDashboard({
                   key={f.id}
                   type="button"
                   onClick={() => setOrderFilter(f.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
                     orderFilter === f.id
-                      ? 'bg-white text-[#241113] border border-[#EBDADA]'
-                      : 'text-[#6A4B4E]'
+                      ? 'bg-[#E50914] text-white'
+                      : 'text-[#B3B3BE] hover:text-white hover:bg-[#17171D]'
                   }`}
                 >
                   {f.label}
@@ -1042,7 +1042,7 @@ export function AdminDashboard({
             </div>
 
             <div className="relative w-full sm:w-72">
-              <Search className="w-4 h-4 text-[#927275] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#858594] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={orderSearch}
@@ -1052,7 +1052,7 @@ export function AdminDashboard({
                     ? 'Order # / ဂဏန်း ၄ လုံး / အမည် ရှာရန်...'
                     : 'Search Order #, Last 4 digits, Customer...'
                 }
-                className="w-full h-10 pl-9 pr-3 rounded-xl bg-white border border-[#D8BEBE] text-xs text-[#241113]"
+                className="w-full h-10 pl-9 pr-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-xs text-white placeholder:text-[#787886] focus:border-[#E50914] focus:outline-none"
               />
             </div>
           </div>
@@ -1060,7 +1060,7 @@ export function AdminDashboard({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             <div className="lg:col-span-7 space-y-3">
               {filteredOrders.length === 0 ? (
-                <div className="bg-white border border-[#EBDADA] rounded-2xl p-10 text-center text-sm text-[#6A4B4E]">
+                <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-10 text-center text-sm text-[#B3B3BE]">
                   {t.noOrdersYet}
                 </div>
               ) : (
@@ -1072,22 +1072,22 @@ export function AdminDashboard({
                       onClick={() => setSelectedOrderId(ord.id)}
                       className={`p-4 rounded-2xl border cursor-pointer transition-colors ${
                         isSelected
-                          ? 'bg-[#FCF8F8] border-[#6B1D24]'
-                          : 'bg-white border-[#EBDADA] hover:border-[#CCA9A9]'
+                          ? 'bg-[#180C0E] border-[#E50914]'
+                          : 'bg-[#111115] border-[#24242C] hover:border-[#3D181C]'
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <div className="font-mono-tabular text-sm font-bold text-[#241113]">
+                        <div className="font-mono-tabular text-sm font-bold text-white">
                           {ord.orderNumber}{' '}
-                          <span className="text-[#7A2229] ml-1">· #{ord.receiptLast4}</span>
+                          <span className="text-[#FF4D57] ml-1">· #{ord.receiptLast4}</span>
                         </div>
                         <span
                           className={`inline-flex items-center gap-1 text-xs font-semibold ${
                             ord.status === 'verified_delivered'
-                              ? 'text-[#15803D]'
+                              ? 'text-[#22C55E]'
                               : ord.status === 'rejected'
-                                ? 'text-[#BE123C]'
-                                : 'text-[#B45309]'
+                                ? 'text-[#FF5C67]'
+                                : 'text-[#F59E0B]'
                           }`}
                         >
                           {ord.status === 'verified_delivered' ? (
@@ -1107,11 +1107,11 @@ export function AdminDashboard({
                         </span>
                       </div>
 
-                      <div className="mt-1.5 flex items-center justify-between text-xs text-[#6A4B4E]">
-                        <span>
+                      <div className="mt-1.5 flex items-center justify-between text-xs text-[#B3B3BE]">
+                        <span className="truncate pr-2">
                           {ord.customerName} ({ord.paymentMethodName})
                         </span>
-                        <span className="font-mono-tabular font-semibold text-[#241113]">
+                        <span className="font-mono-tabular font-semibold text-white shrink-0">
                           {formatMmk(ord.totalMmk, lang)}
                         </span>
                       </div>
@@ -1121,19 +1121,21 @@ export function AdminDashboard({
               )}
             </div>
 
-            <div className="lg:col-span-5 bg-white border border-[#EBDADA] rounded-2xl p-6 sticky top-24">
+            <div className="lg:col-span-5 bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 lg:sticky lg:top-24">
               {selectedOrder ? (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-[#F7EEEE] pb-3">
-                    <div>
-                      <div className="font-mono-tabular text-base font-bold text-[#241113]">
+                  <div className="flex items-center justify-between border-b border-[#24242C] pb-3">
+                    <div className="min-w-0 pr-2">
+                      <div className="font-mono-tabular text-base font-bold text-white truncate">
                         {selectedOrder.orderNumber}
                       </div>
-                      <div className="text-xs text-[#6A4B4E]">{selectedOrder.customerEmail}</div>
+                      <div className="text-xs text-[#B3B3BE] truncate">
+                        {selectedOrder.customerEmail}
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-xs text-[#6A4B4E]">Last 4 Digits</div>
-                      <div className="font-mono-tabular text-lg font-bold text-[#7A2229]">
+                    <div className="text-right shrink-0">
+                      <div className="text-xs text-[#858594]">Last 4 Digits</div>
+                      <div className="font-mono-tabular text-lg font-bold text-[#FF4D57]">
                         {selectedOrder.receiptLast4}
                       </div>
                     </div>
@@ -1141,13 +1143,13 @@ export function AdminDashboard({
 
                   <div>
                     <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-semibold text-[#241113]">
+                      <span className="text-xs font-semibold text-white">
                         {lang === 'mm' ? 'ငွေလွဲပြေစာ Screenshot' : 'Payment Screenshot'}
                       </span>
                       <button
                         type="button"
                         onClick={() => setLightboxImage(selectedOrder.receiptImageDataUrl)}
-                        className="inline-flex items-center gap-1 text-xs text-[#7A2229] hover:underline cursor-pointer"
+                        className="inline-flex items-center gap-1 text-xs font-medium text-[#FF4D57] hover:underline cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>{lang === 'mm' ? 'ပုံကြီးချဲ့ကြည့်ရန်' : 'Zoom'}</span>
@@ -1157,36 +1159,36 @@ export function AdminDashboard({
                       src={selectedOrder.receiptImageDataUrl}
                       alt="Receipt proof"
                       onClick={() => setLightboxImage(selectedOrder.receiptImageDataUrl)}
-                      className="w-full max-h-56 object-contain rounded-xl border border-[#EBDADA] bg-[#FCF8F8] cursor-pointer"
+                      className="w-full max-h-56 object-contain rounded-xl border border-[#24242C] bg-[#0C0C10] cursor-pointer"
                     />
                   </div>
 
-                  <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-xs space-y-1.5">
+                  <div className="p-3.5 rounded-xl bg-[#0C0C10] border border-[#24242C] text-xs space-y-1.5">
                     {selectedOrder.items.map((item, i) => (
-                      <div key={i} className="flex justify-between">
-                        <span className="text-[#241113] font-medium">
+                      <div key={i} className="flex justify-between gap-2">
+                        <span className="text-white font-medium">
                           {item.quantity}x {lang === 'mm' ? item.titleMm : item.titleEn} (
                           {lang === 'mm' ? item.variantLabelMm : item.variantLabelEn})
                         </span>
-                        <span className="font-mono-tabular">
+                        <span className="font-mono-tabular text-[#B3B3BE] shrink-0">
                           {formatMmk(item.unitPriceMmk * item.quantity, lang)}
                         </span>
                       </div>
                     ))}
-                    <div className="pt-1.5 border-t border-[#EBDADA] flex justify-between font-bold text-[#241113]">
+                    <div className="pt-2 border-t border-[#24242C] flex justify-between font-bold text-white">
                       <span>{selectedOrder.paymentMethodName}</span>
-                      <span className="font-mono-tabular text-[#7A2229]">
+                      <span className="font-mono-tabular text-[#FF4D57]">
                         {formatMmk(selectedOrder.totalMmk, lang)}
                       </span>
                     </div>
-                    <div className="pt-1 text-[#6A4B4E]">
-                      <strong>Contact:</strong> {selectedOrder.deliveryContact}{' '}
+                    <div className="pt-1 text-[#B3B3BE]">
+                      <strong className="text-white">Contact:</strong> {selectedOrder.deliveryContact}{' '}
                       {selectedOrder.customerPhone && `· ${selectedOrder.customerPhone}`}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#241113] mb-1">
+                    <label className="block text-xs font-semibold text-white mb-1">
                       {t.deliveredOutputLabel}
                     </label>
                     <textarea
@@ -1194,12 +1196,12 @@ export function AdminDashboard({
                       value={deliveryPayload}
                       onChange={(e) => setDeliveryPayload(e.target.value)}
                       placeholder={t.deliveryPayloadPlaceholder}
-                      className="w-full p-2.5 rounded-xl border border-[#D8BEBE] font-mono-tabular text-xs text-[#241113]"
+                      className="w-full p-2.5 rounded-xl bg-[#0C0C10] border border-[#2A2A34] font-mono-tabular text-xs text-white placeholder:text-[#787886] focus:border-[#E50914] focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#241113] mb-1">
+                    <label className="block text-xs font-semibold text-white mb-1">
                       {t.adminNoteLabel}
                     </label>
                     <input
@@ -1207,7 +1209,7 @@ export function AdminDashboard({
                       value={adminNote}
                       onChange={(e) => setAdminNote(e.target.value)}
                       placeholder={t.adminNotePlaceholder}
-                      className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs text-[#241113]"
+                      className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-xs text-white placeholder:text-[#787886] focus:border-[#E50914] focus:outline-none"
                     />
                   </div>
 
@@ -1218,7 +1220,7 @@ export function AdminDashboard({
                       onClick={() =>
                         handleUpdateOrderStatus(selectedOrder, 'verified_delivered')
                       }
-                      className="h-10 px-3 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-50 cursor-pointer"
+                      className="h-10 px-3 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 transition-colors cursor-pointer"
                     >
                       {t.approveDeliver}
                     </button>
@@ -1226,7 +1228,7 @@ export function AdminDashboard({
                       type="button"
                       disabled={updatingOrder}
                       onClick={() => handleUpdateOrderStatus(selectedOrder, 'rejected')}
-                      className="h-10 px-3 rounded-xl border border-[#FECDD3] bg-[#FFF1F2] text-[#BE123C] text-xs font-medium hover:bg-[#FFE4E6] disabled:opacity-50 cursor-pointer"
+                      className="h-10 px-3 rounded-xl border border-[#6E1721] bg-[#230B0F] text-[#FF8A92] text-xs font-semibold hover:bg-[#321016] disabled:opacity-50 transition-colors cursor-pointer"
                     >
                       {t.rejectOrder}
                     </button>
@@ -1236,7 +1238,7 @@ export function AdminDashboard({
                     type="button"
                     disabled={sendingOrderToTelegram}
                     onClick={() => handleManualSendOrderToTelegram(selectedOrder)}
-                    className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] bg-[#FCF8F8] text-[#6B1D24] text-xs font-medium hover:bg-[#F7EEEE] disabled:opacity-50 inline-flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full h-9 px-3 rounded-xl border border-[#3D181C] bg-[#180C0E] text-[#FF4D57] text-xs font-semibold hover:bg-[#230E11] disabled:opacity-50 inline-flex items-center justify-center gap-2 transition-colors cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>
@@ -1245,7 +1247,7 @@ export function AdminDashboard({
                   </button>
                 </div>
               ) : (
-                <div className="py-12 text-center text-xs text-[#6A4B4E]">
+                <div className="py-12 text-center text-xs text-[#858594]">
                   {lang === 'mm'
                     ? 'စိစစ်ရန် ဘယ်ဘက်မှ အော်ဒါတစ်ခုကို ရွေးချယ်ပါ'
                     : 'Select an order on the left to inspect its receipt screenshot and approve delivery.'}
@@ -1258,8 +1260,8 @@ export function AdminDashboard({
 
       {activeTab === 'products' && (
         <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="font-display text-lg font-bold text-[#241113]">
+          <div className="flex flex-wrap justify-between items-center gap-3">
+            <h2 className="font-display text-lg font-bold text-white">
               {t.adminTabProducts}
             </h2>
             <button
@@ -1268,7 +1270,7 @@ export function AdminDashboard({
                 setEditingProduct(null);
                 setProductModalOpen(true);
               }}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] shadow-[0_6px_18px_-4px_rgba(229,9,20,0.45)] transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>{t.addProduct}</span>
@@ -1284,34 +1286,35 @@ export function AdminDashboard({
               return (
                 <div
                   key={p.id}
-                  className="bg-white border border-[#EBDADA] rounded-2xl p-4 flex flex-col justify-between gap-4"
+                  className="bg-[#111115] border border-[#24242C] hover:border-[#3D181C] rounded-2xl p-4 h-full flex flex-col justify-between gap-4 transition-colors"
                 >
                   <div className="flex gap-3.5">
                     <img
                       src={p.imageUrl}
                       alt={p.titleEn}
                       referrerPolicy="no-referrer"
-                      className="w-20 h-16 rounded-xl object-cover border border-[#EBDADA] bg-[#FCF8F8] shrink-0"
+                      className="w-20 h-16 rounded-xl object-cover border border-[#24242C] bg-[#0C0C10] shrink-0"
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="text-[11px] text-[#9A4D53] font-medium truncate">
+                      <div className="text-[11px] text-[#FF4D57] font-semibold truncate">
                         {p.brand} · {p.category}
                       </div>
-                      <div className="text-sm font-semibold text-[#241113] line-clamp-1">
+                      <div className="text-sm font-semibold text-white line-clamp-1">
                         {lang === 'mm' ? p.titleMm : p.titleEn}
                       </div>
-                      <div className="mt-1 font-mono-tabular text-xs font-bold text-[#7A2229]">
-                        {formatMmk(p.priceMmk, lang)} · Stock: {totalStock}
+                      <div className="mt-1 font-mono-tabular text-xs font-bold text-[#B3B3BE]">
+                        <span className="text-white">{formatMmk(p.priceMmk, lang)}</span> · Stock:{' '}
+                        {totalStock}
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-[#F7EEEE] flex items-center justify-between gap-2 text-xs">
+                  <div className="pt-3 border-t border-[#24242C] flex items-center justify-between gap-2 text-xs">
                     <button
                       type="button"
                       onClick={() => handleToggleProductActive(p)}
-                      className={`font-medium cursor-pointer ${
-                        p.active ? 'text-[#15803D]' : 'text-[#927275]'
+                      className={`font-semibold cursor-pointer ${
+                        p.active ? 'text-[#22C55E]' : 'text-[#858594]'
                       }`}
                     >
                       {p.active ? 'Active' : 'Hidden'}
@@ -1323,7 +1326,7 @@ export function AdminDashboard({
                           setEditingProduct(p);
                           setProductModalOpen(true);
                         }}
-                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[#D8BEBE] text-[#6B1D24] hover:bg-[#FCF8F8] cursor-pointer"
+                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#0C0C10] border border-[#2A2A34] text-white hover:border-[#E50914] transition-colors cursor-pointer"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
                         <span>{lang === 'mm' ? 'ပြင်မည်' : 'Edit'}</span>
@@ -1331,7 +1334,7 @@ export function AdminDashboard({
                       <button
                         type="button"
                         onClick={() => handleDeleteProduct(p.id)}
-                        className="p-1.5 rounded-lg text-[#BE123C] hover:bg-[#FFF1F2] cursor-pointer"
+                        className="p-1.5 rounded-lg text-[#FF5C67] hover:bg-[#230B0F] transition-colors cursor-pointer"
                         title="Delete"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -1350,15 +1353,15 @@ export function AdminDashboard({
           <div className="lg:col-span-5 space-y-6">
             <form
               onSubmit={handleSaveSitewidePromo}
-              className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4"
+              className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-4"
             >
-              <h3 className="font-display text-base font-bold text-[#241113]">
+              <h3 className="font-display text-base font-bold text-white">
                 {lang === 'mm'
                   ? 'စတိုးတစ်ခုလုံး အထူးလျှော့ဈေး (Sitewide Discount)'
                   : 'Sitewide Seasonal Discount'}
               </h3>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">
+                <label className="block text-xs text-[#B3B3BE] mb-1">
                   {lang === 'mm' ? 'လျှော့ဈေး ရာခိုင်နှုန်း (%)' : 'Discount Percentage (%)'}
                 </label>
                 <input
@@ -1367,31 +1370,31 @@ export function AdminDashboard({
                   max={90}
                   value={sitewidePct}
                   onChange={(e) => setSitewidePct(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] font-mono-tabular text-sm"
+                  className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white font-mono-tabular text-sm focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Promo Label (EN)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Promo Label (EN)</label>
                 <input
                   type="text"
                   value={sitewideLabelEn}
                   onChange={(e) => setSitewideLabelEn(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-sm"
+                  className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-sm focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">ပရိုမိုးရှင်း အမည် (မြန်မာ)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">ပရိုမိုးရှင်း အမည် (မြန်မာ)</label>
                 <input
                   type="text"
                   value={sitewideLabelMm}
                   onChange={(e) => setSitewideLabelMm(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-sm"
+                  className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-sm focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <button
                 type="submit"
                 disabled={savingCms}
-                className="w-full h-10 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] cursor-pointer"
+                className="w-full h-10 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {lang === 'mm' ? 'Sitewide Discount သိမ်းမည်' : 'Apply Storewide Discount'}
               </button>
@@ -1399,29 +1402,29 @@ export function AdminDashboard({
 
             <form
               onSubmit={handleCreatePromo}
-              className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4"
+              className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-4"
             >
-              <h3 className="font-display text-base font-bold text-[#241113]">
+              <h3 className="font-display text-base font-bold text-white">
                 {t.addPromo}
               </h3>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs text-[#6A4B4E] mb-1">Code *</label>
+                  <label className="block text-xs text-[#B3B3BE] mb-1">Code *</label>
                   <input
                     type="text"
                     required
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                     placeholder="SAVE15"
-                    className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] font-mono-tabular uppercase text-xs"
+                    className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] font-mono-tabular uppercase text-xs focus:border-[#E50914] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-[#6A4B4E] mb-1">Type</label>
+                  <label className="block text-xs text-[#B3B3BE] mb-1">Type</label>
                   <select
                     value={promoType}
                     onChange={(e) => setPromoType(e.target.value as 'percent' | 'fixed')}
-                    className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] bg-white text-xs"
+                    className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                   >
                     <option value="percent">Percentage (%)</option>
                     <option value="fixed">Fixed MMK</option>
@@ -1430,33 +1433,33 @@ export function AdminDashboard({
               </div>
               <div className="grid grid-cols-3 gap-2.5">
                 <div>
-                  <label className="block text-xs text-[#6A4B4E] mb-1">Value</label>
+                  <label className="block text-xs text-[#B3B3BE] mb-1">Value</label>
                   <input
                     type="number"
                     min={1}
                     value={promoValue}
                     onChange={(e) => setPromoValue(e.target.value)}
-                    className="w-full h-10 px-2.5 rounded-xl border border-[#D8BEBE] font-mono-tabular text-xs"
+                    className="w-full h-10 px-2.5 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white font-mono-tabular text-xs focus:border-[#E50914] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-[#6A4B4E] mb-1">Min MMK</label>
+                  <label className="block text-xs text-[#B3B3BE] mb-1">Min MMK</label>
                   <input
                     type="number"
                     min={0}
                     value={promoMinOrder}
                     onChange={(e) => setPromoMinOrder(e.target.value)}
-                    className="w-full h-10 px-2.5 rounded-xl border border-[#D8BEBE] font-mono-tabular text-xs"
+                    className="w-full h-10 px-2.5 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white font-mono-tabular text-xs focus:border-[#E50914] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-[#6A4B4E] mb-1">Max Uses</label>
+                  <label className="block text-xs text-[#B3B3BE] mb-1">Max Uses</label>
                   <input
                     type="number"
                     min={0}
                     value={promoMaxUses}
                     onChange={(e) => setPromoMaxUses(e.target.value)}
-                    className="w-full h-10 px-2.5 rounded-xl border border-[#D8BEBE] font-mono-tabular text-xs"
+                    className="w-full h-10 px-2.5 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white font-mono-tabular text-xs focus:border-[#E50914] focus:outline-none"
                   />
                 </div>
               </div>
@@ -1465,30 +1468,30 @@ export function AdminDashboard({
                 value={promoTitleEn}
                 onChange={(e) => setPromoTitleEn(e.target.value)}
                 placeholder="Description (EN)"
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] text-xs focus:border-[#E50914] focus:outline-none"
               />
               <input
                 type="text"
                 value={promoTitleMm}
                 onChange={(e) => setPromoTitleMm(e.target.value)}
                 placeholder="ဖော်ပြချက် (မြန်မာ)"
-                className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] text-xs focus:border-[#E50914] focus:outline-none"
               />
               <button
                 type="submit"
                 disabled={savingPromo}
-                className="w-full h-10 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] cursor-pointer"
+                className="w-full h-10 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {t.addPromo}
               </button>
             </form>
           </div>
 
-          <div className="lg:col-span-7 bg-white border border-[#EBDADA] rounded-2xl p-6">
-            <h3 className="font-display text-base font-bold text-[#241113] mb-4">
+          <div className="lg:col-span-7 bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6">
+            <h3 className="font-display text-base font-bold text-white mb-4">
               {lang === 'mm' ? 'ဖန်တီးထားသော Coupon ကုဒ်များ' : 'Promo Codes'}
             </h3>
-            <div className="divide-y divide-[#F7EEEE]">
+            <div className="divide-y divide-[#24242C]">
               {promotions.map((promo) => {
                 const liveUses = orders.filter(
                   (o) => o.promoCode === promo.code && o.status !== 'rejected'
@@ -1500,17 +1503,17 @@ export function AdminDashboard({
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono-tabular text-sm font-bold text-[#7A2229]">
+                        <span className="font-mono-tabular text-sm font-bold text-[#FF4D57]">
                           {promo.code}
                         </span>
-                        <span className="text-xs text-[#6A4B4E]">
+                        <span className="text-xs text-[#B3B3BE]">
                           ·{' '}
                           {promo.discountType === 'percent'
                             ? `${promo.discountValue}% OFF`
                             : formatMmk(promo.discountValue, lang)}
                         </span>
                       </div>
-                      <div className="text-xs text-[#6A4B4E] mt-0.5">
+                      <div className="text-xs text-[#858594] mt-0.5">
                         {lang === 'mm' ? promo.titleMm : promo.titleEn} · Min{' '}
                         {formatMmk(promo.minOrderMmk, lang)} · Used {liveUses}/{promo.maxUses}
                       </div>
@@ -1520,7 +1523,7 @@ export function AdminDashboard({
                         type="button"
                         onClick={() => handleTogglePromo(promo)}
                         className={`text-xs font-semibold cursor-pointer ${
-                          promo.active ? 'text-[#15803D]' : 'text-[#927275]'
+                          promo.active ? 'text-[#22C55E]' : 'text-[#858594]'
                         }`}
                       >
                         {promo.active ? 'Active' : 'Paused'}
@@ -1528,7 +1531,7 @@ export function AdminDashboard({
                       <button
                         type="button"
                         onClick={() => handleDeletePromo(promo.id)}
-                        className="p-1.5 text-[#BE123C] hover:bg-[#FFF1F2] rounded-lg cursor-pointer"
+                        className="p-1.5 text-[#FF5C67] hover:bg-[#230B0F] rounded-lg transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -1544,10 +1547,10 @@ export function AdminDashboard({
       {activeTab === 'cms' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-6 space-y-6">
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="font-display text-base font-bold text-[#241113] flex items-center gap-2">
-                  <QrCode className="w-4 h-4 text-[#7A2229]" />
+                <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
+                  <QrCode className="w-4 h-4 text-[#E50914]" />
                   <span>
                     {lang === 'mm'
                       ? 'ငွေလွဲအကောင့်နှင့် QR Code များ'
@@ -1558,7 +1561,7 @@ export function AdminDashboard({
                   <button
                     type="button"
                     onClick={resetPmForm}
-                    className="text-xs text-[#7A2229] underline cursor-pointer"
+                    className="text-xs font-semibold text-[#FF4D57] underline cursor-pointer"
                   >
                     + New
                   </button>
@@ -1569,22 +1572,22 @@ export function AdminDashboard({
                 {paymentMethods.map((pm) => (
                   <div
                     key={pm.id}
-                    className="p-3.5 rounded-xl border border-[#EBDADA] bg-[#FCF8F8] flex items-center gap-3"
+                    className="p-3.5 rounded-xl border border-[#24242C] bg-[#0C0C10] flex items-center gap-3"
                   >
                     {pm.qrImageDataUrl ? (
                       <img
                         src={pm.qrImageDataUrl}
                         alt={pm.name}
-                        className="w-14 h-14 rounded-lg object-contain bg-white border border-[#EBDADA] shrink-0"
+                        className="w-14 h-14 rounded-lg object-contain bg-white p-1 border border-[#24242C] shrink-0"
                       />
                     ) : (
-                      <div className="w-14 h-14 rounded-lg bg-white border border-[#EBDADA] flex items-center justify-center shrink-0">
-                        <QrCode className="w-6 h-6 text-[#9A4D53]" />
+                      <div className="w-14 h-14 rounded-lg bg-[#17171D] border border-[#24242C] flex items-center justify-center shrink-0">
+                        <QrCode className="w-6 h-6 text-[#FF4D57]" />
                       </div>
                     )}
                     <div className="min-w-0 flex-1">
-                      <div className="text-sm font-semibold text-[#241113]">{pm.name}</div>
-                      <div className="text-xs text-[#6A4B4E] truncate">
+                      <div className="text-sm font-semibold text-white">{pm.name}</div>
+                      <div className="text-xs text-[#B3B3BE] truncate">
                         {pm.accountName} · <span className="font-mono-tabular">{pm.accountNumber}</span>
                       </div>
                     </div>
@@ -1592,8 +1595,8 @@ export function AdminDashboard({
                       <button
                         type="button"
                         onClick={() => handleTogglePm(pm)}
-                        className={`text-xs font-medium px-2 py-1 rounded-lg cursor-pointer ${
-                          pm.active ? 'text-[#15803D]' : 'text-[#927275]'
+                        className={`text-xs font-semibold px-2 py-1 rounded-lg cursor-pointer ${
+                          pm.active ? 'text-[#22C55E]' : 'text-[#858594]'
                         }`}
                       >
                         {pm.active ? 'On' : 'Off'}
@@ -1601,14 +1604,14 @@ export function AdminDashboard({
                       <button
                         type="button"
                         onClick={() => startEditPaymentMethod(pm)}
-                        className="p-1.5 text-[#6B1D24] hover:bg-white rounded-lg cursor-pointer"
+                        className="p-1.5 text-[#B3B3BE] hover:text-white hover:bg-[#17171D] rounded-lg transition-colors cursor-pointer"
                       >
                         <Edit3 className="w-4 h-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDeletePm(pm.id)}
-                        className="p-1.5 text-[#BE123C] hover:bg-white rounded-lg cursor-pointer"
+                        className="p-1.5 text-[#FF5C67] hover:bg-[#230B0F] rounded-lg transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -1619,9 +1622,9 @@ export function AdminDashboard({
 
               <form
                 onSubmit={handleSavePaymentMethod}
-                className="pt-4 border-t border-[#EBDADA] space-y-3"
+                className="pt-4 border-t border-[#24242C] space-y-3"
               >
-                <div className="text-xs font-semibold text-[#241113]">
+                <div className="text-xs font-semibold text-white">
                   {editingPmId ? 'Edit Payment Method & QR' : t.addPaymentMethod}
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
@@ -1631,7 +1634,7 @@ export function AdminDashboard({
                     value={pmName}
                     onChange={(e) => setPmName(e.target.value)}
                     placeholder="Channel (KBZPay)"
-                    className="h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                    className="h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] text-xs focus:border-[#E50914] focus:outline-none"
                   />
                   <input
                     type="text"
@@ -1639,7 +1642,7 @@ export function AdminDashboard({
                     value={pmAccName}
                     onChange={(e) => setPmAccName(e.target.value)}
                     placeholder="Account Name"
-                    className="h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                    className="h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] text-xs focus:border-[#E50914] focus:outline-none"
                   />
                   <input
                     type="text"
@@ -1647,7 +1650,7 @@ export function AdminDashboard({
                     value={pmAccNumber}
                     onChange={(e) => setPmAccNumber(e.target.value)}
                     placeholder="Phone / Acc No."
-                    className="h-9 px-3 rounded-xl border border-[#D8BEBE] font-mono-tabular text-xs"
+                    className="h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] font-mono-tabular text-xs focus:border-[#E50914] focus:outline-none"
                   />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -1656,18 +1659,18 @@ export function AdminDashboard({
                     value={pmInstrEn}
                     onChange={(e) => setPmInstrEn(e.target.value)}
                     placeholder="Instructions (EN)"
-                    className="h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                    className="h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] text-xs focus:border-[#E50914] focus:outline-none"
                   />
                   <input
                     type="text"
                     value={pmInstrMm}
                     onChange={(e) => setPmInstrMm(e.target.value)}
                     placeholder="ညွှန်ကြားချက် (မြန်မာ)"
-                    className="h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                    className="h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white placeholder:text-[#787886] text-xs focus:border-[#E50914] focus:outline-none"
                   />
                 </div>
 
-                <label className="flex items-center gap-4 p-3 rounded-xl border border-dashed border-[#CCA9A9] bg-[#FCF8F8] cursor-pointer">
+                <label className="flex items-center gap-4 p-3 rounded-xl border border-dashed border-[#3D181C] bg-[#0C0C10] hover:border-[#E50914] transition-colors cursor-pointer">
                   <input
                     type="file"
                     accept="image/*"
@@ -1678,20 +1681,20 @@ export function AdminDashboard({
                     <img
                       src={pmQrDataUrl}
                       alt="QR Preview"
-                      className="w-16 h-16 rounded-lg object-contain bg-white border border-[#EBDADA]"
+                      className="w-16 h-16 rounded-lg object-contain bg-white p-1 border border-[#24242C]"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-white border border-[#EBDADA] flex items-center justify-center">
-                      <ImagePlus className="w-6 h-6 text-[#9A4D53]" />
+                    <div className="w-16 h-16 rounded-lg bg-[#17171D] border border-[#24242C] flex items-center justify-center">
+                      <ImagePlus className="w-6 h-6 text-[#FF4D57]" />
                     </div>
                   )}
                   <div className="text-xs">
-                    <div className="font-semibold text-[#241113]">
+                    <div className="font-semibold text-white">
                       {lang === 'mm'
                         ? 'သင်၏ ကိုယ်ပိုင် QR Code ပုံ တင်ရန် နှိပ်ပါ'
                         : 'Click to Upload Your Merchant QR Code'}
                     </div>
-                    <div className="text-[11px] text-[#6A4B4E]">
+                    <div className="text-[11px] text-[#858594]">
                       KBZPay / WavePay / CB Pay / Bank QR Screenshot
                     </div>
                   </div>
@@ -1700,7 +1703,7 @@ export function AdminDashboard({
                 <button
                   type="submit"
                   disabled={savingPm}
-                  className="w-full h-10 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] cursor-pointer"
+                  className="w-full h-10 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   {savingPm
                     ? 'Saving...'
@@ -1712,18 +1715,18 @@ export function AdminDashboard({
             </div>
 
             {/* Telegram Integration Shortcut Card */}
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="bg-[#111115] border border-[#3D181C] rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="space-y-1">
-                <h3 className="font-display text-base font-bold text-[#241113] flex items-center gap-2">
-                  <Send className="w-4 h-4 text-[#7A2229]" />
+                <h3 className="font-display text-base font-bold text-white flex items-center gap-2">
+                  <Send className="w-4 h-4 text-[#E50914]" />
                   <span>{t.telegramSectionTitle}</span>
                 </h3>
-                <p className="text-xs text-[#6A4B4E]">{t.telegramSectionDesc}</p>
+                <p className="text-xs text-[#B3B3BE]">{t.telegramSectionDesc}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setActiveTab('telegram')}
-                className="px-4 py-2 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] whitespace-nowrap shrink-0 cursor-pointer"
+                className="px-4 py-2 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] whitespace-nowrap shrink-0 transition-colors cursor-pointer"
               >
                 {t.adminTabTelegram}
               </button>
@@ -1732,9 +1735,9 @@ export function AdminDashboard({
 
           <form
             onSubmit={handleSaveCms}
-            className="lg:col-span-6 bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4"
+            className="lg:col-span-6 bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-4"
           >
-            <h3 className="font-display text-base font-bold text-[#241113]">
+            <h3 className="font-display text-base font-bold text-white">
               {lang === 'mm'
                 ? 'Website Page တစ်ခုလုံး စာသားနှင့် ပုံများ ထိန်းချုပ်ရန်'
                 : 'Full Storefront CMS Control'}
@@ -1742,17 +1745,17 @@ export function AdminDashboard({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Store Name</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Store Name</label>
                 <input
                   type="text"
                   required
                   value={cmsForm.storeName}
                   onChange={(e) => setCmsForm({ ...cmsForm, storeName: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">
+                <label className="block text-xs text-[#B3B3BE] mb-1">
                   1 USD Exchange Rate (MMK)
                 </label>
                 <input
@@ -1762,78 +1765,78 @@ export function AdminDashboard({
                   onChange={(e) =>
                     setCmsForm({ ...cmsForm, exchangeRateMmk: Number(e.target.value) })
                   }
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] font-mono-tabular text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white font-mono-tabular text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Top Bar Notice (EN)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Top Bar Notice (EN)</label>
                 <input
                   type="text"
                   value={cmsForm.announcementEn}
                   onChange={(e) => setCmsForm({ ...cmsForm, announcementEn: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">ထိပ်ဆုံးကြေညာချက် (မြန်မာ)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">ထိပ်ဆုံးကြေညာချက် (မြန်မာ)</label>
                 <input
                   type="text"
                   value={cmsForm.announcementMm}
                   onChange={(e) => setCmsForm({ ...cmsForm, announcementMm: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Hero Headline (EN)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Hero Headline (EN)</label>
                 <input
                   type="text"
                   value={cmsForm.heroTitleEn}
                   onChange={(e) => setCmsForm({ ...cmsForm, heroTitleEn: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Hero ခေါင်းစဉ် (မြန်မာ)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Hero ခေါင်းစဉ် (မြန်မာ)</label>
                 <input
                   type="text"
                   value={cmsForm.heroTitleMm}
                   onChange={(e) => setCmsForm({ ...cmsForm, heroTitleMm: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Hero Subtitle (EN)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Hero Subtitle (EN)</label>
                 <textarea
                   rows={2}
                   value={cmsForm.heroSubtitleEn}
                   onChange={(e) => setCmsForm({ ...cmsForm, heroSubtitleEn: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full p-2.5 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Hero စာသား (မြန်မာ)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Hero စာသား (မြန်မာ)</label>
                 <textarea
                   rows={2}
                   value={cmsForm.heroSubtitleMm}
                   onChange={(e) => setCmsForm({ ...cmsForm, heroSubtitleMm: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full p-2.5 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] space-y-2.5">
+            <div className="p-3.5 rounded-xl bg-[#0C0C10] border border-[#24242C] space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-[#241113]">Hero Banner Image</span>
-                <label className="text-xs font-medium text-[#7A2229] cursor-pointer hover:underline">
+                <span className="text-xs font-semibold text-white">Hero Banner Image</span>
+                <label className="text-xs font-semibold text-[#FF4D57] cursor-pointer hover:underline">
                   Upload Banner
                   <input
                     type="file"
@@ -1848,7 +1851,7 @@ export function AdminDashboard({
                   <img
                     src={cmsForm.heroImageUrl}
                     alt="Hero preview"
-                    className="w-16 h-12 rounded-lg object-cover border border-[#EBDADA] bg-white shrink-0"
+                    className="w-16 h-12 rounded-lg object-cover border border-[#24242C] bg-[#111115] shrink-0"
                   />
                 )}
                 <input
@@ -1856,7 +1859,7 @@ export function AdminDashboard({
                   value={cmsForm.heroImageUrl}
                   onChange={(e) => setCmsForm({ ...cmsForm, heroImageUrl: e.target.value })}
                   placeholder="Paste hero image URL or upload banner..."
-                  className="flex-1 h-9 px-3 rounded-lg bg-white border border-[#D8BEBE] text-xs text-[#241113]"
+                  className="flex-1 h-9 px-3 rounded-lg bg-[#111115] border border-[#2A2A34] text-xs text-white placeholder:text-[#787886] focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div className="flex flex-wrap gap-1.5">
@@ -1865,7 +1868,7 @@ export function AdminDashboard({
                     key={p.url}
                     type="button"
                     onClick={() => setCmsForm({ ...cmsForm, heroImageUrl: p.url })}
-                    className="px-2 py-1 rounded-md bg-white border border-[#EBDADA] text-[11px] text-[#6A4B4E] hover:border-[#7A2229] cursor-pointer"
+                    className="px-2 py-1 rounded-md bg-[#17171D] border border-[#2A2A34] text-[11px] text-[#B3B3BE] hover:text-white hover:border-[#E50914] transition-colors cursor-pointer"
                   >
                     {p.label}
                   </button>
@@ -1875,42 +1878,42 @@ export function AdminDashboard({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Support Phone</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Support Phone</label>
                 <input
                   type="text"
                   value={cmsForm.supportPhone}
                   onChange={(e) => setCmsForm({ ...cmsForm, supportPhone: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Support Telegram</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Support Telegram</label>
                 <input
                   type="text"
                   value={cmsForm.supportTelegram}
                   onChange={(e) => setCmsForm({ ...cmsForm, supportTelegram: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Footer Note (EN)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Footer Note (EN)</label>
                 <input
                   type="text"
                   value={cmsForm.footerNoteEn}
                   onChange={(e) => setCmsForm({ ...cmsForm, footerNoteEn: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs text-[#6A4B4E] mb-1">Footer စာသား (မြန်မာ)</label>
+                <label className="block text-xs text-[#B3B3BE] mb-1">Footer စာသား (မြန်မာ)</label>
                 <input
                   type="text"
                   value={cmsForm.footerNoteMm}
                   onChange={(e) => setCmsForm({ ...cmsForm, footerNoteMm: e.target.value })}
-                  className="w-full h-9 px-3 rounded-xl border border-[#D8BEBE] text-xs"
+                  className="w-full h-9 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-white text-xs focus:border-[#E50914] focus:outline-none"
                 />
               </div>
             </div>
@@ -1918,7 +1921,7 @@ export function AdminDashboard({
             <button
               type="submit"
               disabled={savingCms}
-              className="w-full h-11 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] inline-flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full h-11 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 inline-flex items-center justify-center gap-2 shadow-[0_6px_20px_-4px_rgba(229,9,20,0.45)] transition-colors cursor-pointer"
             >
               <Check className="w-4 h-4" />
               <span>{savingCms ? 'Saving...' : t.saveCms}</span>
@@ -1928,17 +1931,17 @@ export function AdminDashboard({
       )}
 
       {activeTab === 'telegram' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           {/* Left Column: Live Status, Test Alert & Notification Rules */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-5">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-display text-lg font-bold text-[#241113] flex items-center gap-2">
-                    <Send className="w-4 h-4 text-[#7A2229]" />
+                  <h3 className="font-display text-lg font-bold text-white flex items-center gap-2">
+                    <Send className="w-4 h-4 text-[#E50914]" />
                     <span>{t.telegramSectionTitle}</span>
                   </h3>
-                  <p className="mt-1 text-xs text-[#6A4B4E] leading-relaxed">
+                  <p className="mt-1 text-xs text-[#B3B3BE] leading-relaxed">
                     {t.telegramSectionDesc}
                   </p>
                 </div>
@@ -1948,10 +1951,10 @@ export function AdminDashboard({
                     <span
                       className={`text-xs font-semibold px-2.5 py-1 rounded-lg border ${
                         telegramStatus.configured && telegramStatus.botReachable !== false
-                          ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]'
+                          ? 'bg-[#0D2618] border-[#166534] text-[#22C55E]'
                           : telegramStatus.apiUnavailable
-                            ? 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]'
-                            : 'bg-[#FFFBEB] border-[#FDE68A] text-[#B45309]'
+                            ? 'bg-[#230B0F] border-[#6E1721] text-[#FF8A92]'
+                            : 'bg-[#291D0B] border-[#78350F] text-[#F59E0B]'
                       }`}
                     >
                       {telegramStatus.configured && telegramStatus.botReachable !== false
@@ -1966,7 +1969,7 @@ export function AdminDashboard({
                     disabled={checkingTelegram}
                     onClick={fetchTelegramStatus}
                     title={t.telegramRefreshStatus}
-                    className="p-2 rounded-lg border border-[#EBDADA] text-[#6A4B4E] hover:text-[#241113] hover:bg-[#FCF8F8] disabled:opacity-50 cursor-pointer"
+                    className="p-2 rounded-lg bg-[#0C0C10] border border-[#24242C] text-[#B3B3BE] hover:text-white hover:border-[#E50914] disabled:opacity-50 transition-colors cursor-pointer"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${checkingTelegram ? 'animate-spin' : ''}`} />
                   </button>
@@ -1975,20 +1978,20 @@ export function AdminDashboard({
 
               {/* Secret Presence Checkmarks (never exposes actual secrets) */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <div className="text-[11px] text-[#6A4B4E]">TELEGRAM_BOT_TOKEN</div>
+                <div className="p-3 rounded-xl bg-[#0C0C10] border border-[#24242C]">
+                  <div className="text-[11px] text-[#858594]">TELEGRAM_BOT_TOKEN</div>
                   <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold">
                     {telegramStatus?.hasBotToken ? (
                       <>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#15803D]" />
-                        <span className="text-[#15803D]">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#22C55E]" />
+                        <span className="text-[#22C55E]">
                           {lang === 'mm' ? 'ထည့်သွင်းပြီး' : 'Configured'}
                         </span>
                       </>
                     ) : (
                       <>
-                        <AlertTriangle className="w-3.5 h-3.5 text-[#B45309]" />
-                        <span className="text-[#B45309]">
+                        <AlertTriangle className="w-3.5 h-3.5 text-[#F59E0B]" />
+                        <span className="text-[#F59E0B]">
                           {lang === 'mm' ? 'မထည့်ရသေးပါ' : 'Missing'}
                         </span>
                       </>
@@ -1996,20 +1999,20 @@ export function AdminDashboard({
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <div className="text-[11px] text-[#6A4B4E]">TELEGRAM_CHAT_ID</div>
+                <div className="p-3 rounded-xl bg-[#0C0C10] border border-[#24242C]">
+                  <div className="text-[11px] text-[#858594]">TELEGRAM_CHAT_ID</div>
                   <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold">
                     {telegramStatus?.hasChatId ? (
                       <>
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#15803D]" />
-                        <span className="text-[#15803D]">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#22C55E]" />
+                        <span className="text-[#22C55E]">
                           {lang === 'mm' ? 'ထည့်သွင်းပြီး' : 'Configured'}
                         </span>
                       </>
                     ) : (
                       <>
-                        <AlertTriangle className="w-3.5 h-3.5 text-[#B45309]" />
-                        <span className="text-[#B45309]">
+                        <AlertTriangle className="w-3.5 h-3.5 text-[#F59E0B]" />
+                        <span className="text-[#F59E0B]">
                           {lang === 'mm' ? 'မထည့်ရသေးပါ' : 'Missing'}
                         </span>
                       </>
@@ -2017,11 +2020,11 @@ export function AdminDashboard({
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <div className="text-[11px] text-[#6A4B4E]">
+                <div className="p-3 rounded-xl bg-[#0C0C10] border border-[#24242C]">
+                  <div className="text-[11px] text-[#858594]">
                     {lang === 'mm' ? 'ချိတ်ဆက်ထားသော Bot' : 'Active Bot Handle'}
                   </div>
-                  <div className="mt-1 text-xs font-mono-tabular font-semibold text-[#241113] truncate">
+                  <div className="mt-1 text-xs font-mono-tabular font-semibold text-white truncate">
                     {telegramStatus?.botUsername
                       ? `@${telegramStatus.botUsername}`
                       : telegramStatus?.botError
@@ -2032,7 +2035,7 @@ export function AdminDashboard({
               </div>
 
               {telegramStatus?.botError && (
-                <div className="p-3 rounded-xl bg-[#FFF1F2] border border-[#FECDD3] text-xs text-[#BE123C]">
+                <div className="p-3 rounded-xl bg-[#230B0F] border border-[#6E1721] text-xs text-[#FF8A92]">
                   {telegramStatus.botError}
                 </div>
               )}
@@ -2041,8 +2044,8 @@ export function AdminDashboard({
                 <div
                   className={`p-3 rounded-xl border text-xs ${
                     telegramFeedback.ok
-                      ? 'bg-[#F0FDF4] border-[#BBF7D0] text-[#15803D]'
-                      : 'bg-[#FFF1F2] border-[#FECDD3] text-[#BE123C]'
+                      ? 'bg-[#0D2618] border-[#166534] text-[#22C55E]'
+                      : 'bg-[#230B0F] border-[#6E1721] text-[#FF8A92]'
                   }`}
                 >
                   {telegramFeedback.msg}
@@ -2054,30 +2057,30 @@ export function AdminDashboard({
                   type="button"
                   disabled={testingTelegram}
                   onClick={handleTestTelegram}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-50 whitespace-nowrap shrink-0 cursor-pointer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 whitespace-nowrap shrink-0 transition-colors cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>{testingTelegram ? t.telegramSendingTest : t.telegramSendTest}</span>
                 </button>
-                <span className="text-[11px] text-[#6A4B4E]">{t.telegramSecretsHint}</span>
+                <span className="text-[11px] text-[#858594]">{t.telegramSecretsHint}</span>
               </div>
             </div>
 
             {/* Notification Rules & Message Formatting Preferences */}
             <form
               onSubmit={handleSaveTelegramSettings}
-              className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4"
+              className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-4"
             >
-              <h3 className="font-display text-base font-bold text-[#241113]">
+              <h3 className="font-display text-base font-bold text-white">
                 {t.telegramPrefsTitle}
               </h3>
 
-              <label className="flex items-start justify-between gap-4 p-3.5 rounded-xl border border-[#EBDADA] bg-[#FCF8F8] cursor-pointer">
+              <label className="flex items-start justify-between gap-4 p-3.5 rounded-xl border border-[#24242C] bg-[#0C0C10] cursor-pointer">
                 <div>
-                  <div className="text-xs font-semibold text-[#241113]">
+                  <div className="text-xs font-semibold text-white">
                     {t.telegramNotifyStatusLabel}
                   </div>
-                  <div className="text-[11px] text-[#6A4B4E] mt-0.5">
+                  <div className="text-[11px] text-[#858594] mt-0.5">
                     {t.telegramNotifyStatusDesc}
                   </div>
                 </div>
@@ -2090,16 +2093,16 @@ export function AdminDashboard({
                       notifyOnStatusChange: e.target.checked,
                     }))
                   }
-                  className="mt-0.5 h-4 w-4 accent-[#6B1D24] cursor-pointer"
+                  className="mt-0.5 h-4 w-4 accent-[#E50914] cursor-pointer"
                 />
               </label>
 
-              <label className="flex items-start justify-between gap-4 p-3.5 rounded-xl border border-[#EBDADA] bg-[#FCF8F8] cursor-pointer">
+              <label className="flex items-start justify-between gap-4 p-3.5 rounded-xl border border-[#24242C] bg-[#0C0C10] cursor-pointer">
                 <div>
-                  <div className="text-xs font-semibold text-[#241113]">
+                  <div className="text-xs font-semibold text-white">
                     {t.telegramIncludePhotoLabel}
                   </div>
-                  <div className="text-[11px] text-[#6A4B4E] mt-0.5">
+                  <div className="text-[11px] text-[#858594] mt-0.5">
                     {t.telegramIncludePhotoDesc}
                   </div>
                 </div>
@@ -2112,12 +2115,12 @@ export function AdminDashboard({
                       includeReceiptPhoto: e.target.checked,
                     }))
                   }
-                  className="mt-0.5 h-4 w-4 accent-[#6B1D24] cursor-pointer"
+                  className="mt-0.5 h-4 w-4 accent-[#E50914] cursor-pointer"
                 />
               </label>
 
               <div>
-                <label className="block text-xs font-semibold text-[#241113] mb-1">
+                <label className="block text-xs font-semibold text-white mb-1">
                   {t.telegramHeaderNoteLabel}
                 </label>
                 <input
@@ -2131,14 +2134,14 @@ export function AdminDashboard({
                     }))
                   }
                   placeholder={t.telegramHeaderNotePlaceholder}
-                  className="w-full h-10 px-3 rounded-xl border border-[#D8BEBE] text-xs text-[#241113]"
+                  className="w-full h-10 px-3 rounded-xl bg-[#0C0C10] border border-[#2A2A34] text-xs text-white placeholder:text-[#787886] focus:border-[#E50914] focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={savingTelegramPrefs}
-                className="w-full h-10 rounded-xl bg-[#6B1D24] text-white text-xs font-medium hover:bg-[#52141A] disabled:opacity-50 inline-flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full h-10 rounded-xl bg-[#E50914] text-white text-xs font-semibold hover:bg-[#C40812] disabled:opacity-50 inline-flex items-center justify-center gap-2 transition-colors cursor-pointer"
               >
                 <Check className="w-4 h-4" />
                 <span>{savingTelegramPrefs ? 'Saving...' : t.telegramSavePrefs}</span>
@@ -2148,14 +2151,14 @@ export function AdminDashboard({
 
           {/* Right Column: Setup Guide & Live Message Preview */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-4">
-              <h3 className="font-display text-base font-bold text-[#241113]">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-4">
+              <h3 className="font-display text-base font-bold text-white">
                 {t.telegramSetupGuideTitle}
               </h3>
 
-              <ol className="space-y-3 text-xs text-[#6A4B4E] leading-relaxed">
-                <li className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <div className="font-semibold text-[#241113]">
+              <ol className="space-y-3 text-xs text-[#B3B3BE] leading-relaxed">
+                <li className="p-3 rounded-xl bg-[#0C0C10] border border-[#24242C]">
+                  <div className="font-semibold text-white">
                     {lang === 'mm' ? '၁။ @BotFather ဖြင့် Bot ဖန်တီးပါ' : '1. Create a Bot via @BotFather'}
                   </div>
                   <p className="mt-1">
@@ -2165,8 +2168,8 @@ export function AdminDashboard({
                   </p>
                 </li>
 
-                <li className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA]">
-                  <div className="font-semibold text-[#241113]">
+                <li className="p-3 rounded-xl bg-[#0C0C10] border border-[#24242C]">
+                  <div className="font-semibold text-white">
                     {lang === 'mm' ? '၂။ Chat ID ယူပါ' : '2. Get Your Telegram Chat ID'}
                   </div>
                   <p className="mt-1">
@@ -2176,8 +2179,8 @@ export function AdminDashboard({
                   </p>
                 </li>
 
-                <li className="p-3 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] space-y-2">
-                  <div className="font-semibold text-[#241113]">
+                <li className="p-3 rounded-xl bg-[#0C0C10] border border-[#24242C] space-y-2">
+                  <div className="font-semibold text-white">
                     {lang === 'mm'
                       ? '၃။ Environment Secrets ထဲ ထည့်သွင်းပါ'
                       : '3. Add to Environment Variables'}
@@ -2191,9 +2194,9 @@ export function AdminDashboard({
                     {(['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID'] as const).map((envKey) => (
                       <div
                         key={envKey}
-                        className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white border border-[#EBDADA]"
+                        className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#17171D] border border-[#2A2A34]"
                       >
-                        <code className="font-mono-tabular text-[11px] font-semibold text-[#6B1D24]">
+                        <code className="font-mono-tabular text-[11px] font-semibold text-[#FF4D57]">
                           {envKey}
                         </code>
                         <button
@@ -2203,10 +2206,10 @@ export function AdminDashboard({
                             setCopiedEnvKey(envKey);
                             setTimeout(() => setCopiedEnvKey(null), 1200);
                           }}
-                          className="inline-flex items-center gap-1 text-[11px] text-[#6A4B4E] hover:text-[#241113] cursor-pointer"
+                          className="inline-flex items-center gap-1 text-[11px] text-[#B3B3BE] hover:text-white cursor-pointer"
                         >
                           {copiedEnvKey === envKey ? (
-                            <Check className="w-3 h-3 text-[#15803D]" />
+                            <Check className="w-3 h-3 text-[#22C55E]" />
                           ) : (
                             <Copy className="w-3 h-3" />
                           )}
@@ -2219,26 +2222,26 @@ export function AdminDashboard({
               </ol>
             </div>
 
-            <div className="bg-white border border-[#EBDADA] rounded-2xl p-6 space-y-3">
-              <h3 className="font-display text-sm font-bold text-[#241113]">
+            <div className="bg-[#111115] border border-[#24242C] rounded-2xl p-5 sm:p-6 space-y-3">
+              <h3 className="font-display text-sm font-bold text-white">
                 {t.telegramPreviewTitle}
               </h3>
-              <div className="p-4 rounded-xl bg-[#FCF8F8] border border-[#EBDADA] text-xs font-mono-tabular text-[#241113] space-y-1.5 leading-relaxed">
+              <div className="p-4 rounded-xl bg-[#0C0C10] border border-[#24242C] text-xs font-mono-tabular text-[#F5F5F7] space-y-1.5 leading-relaxed">
                 {telegramSettings.customHeaderNote.trim() && (
-                  <div className="italic text-[#7A2229]">{telegramSettings.customHeaderNote}</div>
+                  <div className="italic text-[#FF4D57]">{telegramSettings.customHeaderNote}</div>
                 )}
-                <div className="font-bold">New Order · {settings.storeName}</div>
+                <div className="font-bold text-white">New Order · {settings.storeName}</div>
                 <div>Order: ORD-849210</div>
                 <div>Total: 45,000 MMK</div>
                 <div>Payment: KBZPay · Slip Last 4: #5829</div>
-                <div className="pt-1 text-[#6A4B4E]">
+                <div className="pt-1 text-[#B3B3BE]">
                   Customer: Kyaw Zin (customer@gmail.com)
                 </div>
-                <div className="text-[#6A4B4E]">
+                <div className="text-[#B3B3BE]">
                   • 1x Gemini Plus 6 Months — 45,000 MMK
                 </div>
                 {telegramSettings.includeReceiptPhoto && (
-                  <div className="pt-1 text-[11px] text-[#15803D]">
+                  <div className="pt-1 text-[11px] text-[#22C55E]">
                     [Payment Receipt Screenshot Attached]
                   </div>
                 )}
@@ -2262,18 +2265,18 @@ export function AdminDashboard({
 
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-50 bg-[#241113]/75 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setLightboxImage(null)}
         >
           <div
-            className="bg-white rounded-2xl p-4 max-w-lg w-full"
+            className="bg-[#111115] border border-[#24242C] rounded-2xl p-4 max-w-lg w-full shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-end mb-2">
               <button
                 type="button"
                 onClick={() => setLightboxImage(null)}
-                className="p-1 text-[#6A4B4E] cursor-pointer"
+                className="p-1 text-[#B3B3BE] hover:text-white cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -2281,7 +2284,7 @@ export function AdminDashboard({
             <img
               src={lightboxImage}
               alt="Customer payment receipt"
-              className="w-full max-h-[80vh] object-contain rounded-xl"
+              className="w-full max-h-[80vh] object-contain rounded-xl bg-[#0C0C10]"
             />
           </div>
         </div>

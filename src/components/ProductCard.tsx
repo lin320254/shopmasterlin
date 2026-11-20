@@ -55,96 +55,97 @@ export function ProductCard({
   return (
     <article
       onClick={() => onSelect(product)}
-      className="group bg-white border border-[#EBDADA] rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:border-[#CCA9A9]"
+      className="group h-full bg-[#111115] border border-[#24242C] rounded-2xl overflow-hidden flex flex-col cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:border-[#E50914]/65 hover:shadow-[0_12px_32px_rgba(0,0,0,0.55),0_0_20px_rgba(229,9,20,0.12)]"
     >
       {/* 4:3 Product Media Surface */}
-      <div className="aspect-[4/3] w-full bg-[#FCF8F8] border-b border-[#EBDADA] overflow-hidden relative">
+      <div className="aspect-[4/3] w-full bg-[#0C0C10] border-b border-[#24242C] overflow-hidden relative">
         {product.imageUrl && !imgError ? (
           <img
             src={product.imageUrl}
             alt={title}
             referrerPolicy="no-referrer"
             onError={() => setImgError(true)}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-[#FCF8F8] to-[#F2E4E4]">
-            <Package className="w-8 h-8 text-[#9A4D53] mb-2" />
-            <span className="text-xs font-medium text-[#6A4B4E] line-clamp-1">{title}</span>
+          <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center bg-gradient-to-br from-[#14141A] to-[#09090C]">
+            <Package className="w-8 h-8 text-[#E50914] mb-2" />
+            <span className="text-xs font-medium text-[#B3B3BE] line-clamp-1">{title}</span>
           </div>
         )}
       </div>
 
       {/* Card Body */}
-      <div className="p-5 flex-1 flex flex-col">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col">
         {/* Unboxed Muted Metadata Kicker */}
-        <div className="flex items-center justify-between gap-2 text-xs text-[#927275] mb-1.5">
+        <div className="flex items-center justify-between gap-2 text-xs text-[#858594] mb-1.5">
           <div className="flex items-center gap-1.5 truncate">
-            <span className="font-medium text-[#9A4D53]">{product.brand}</span>
+            <span className="font-semibold text-[#FF4D57]">{product.brand}</span>
             <span aria-hidden="true">·</span>
             <span className="truncate">{product.category}</span>
           </div>
           {badgeText && (
-            <span className="text-[#7A2229] font-medium shrink-0">{badgeText}</span>
+            <span className="text-[#FF2A36] font-semibold shrink-0">{badgeText}</span>
           )}
         </div>
 
-        <h3 className="font-display text-base font-semibold text-[#241113] leading-snug line-clamp-2">
+        <h3 className="font-display text-base font-semibold text-white leading-snug line-clamp-2">
           {title}
         </h3>
 
-        <p className="mt-2 text-sm text-[#6A4B4E] leading-relaxed line-clamp-2">
+        <p className="mt-2 text-sm text-[#B3B3BE] leading-relaxed line-clamp-2">
           {description}
         </p>
 
-        {/* Delivery, Rating & Stock Metadata Row */}
-        <div className="mt-4 pt-3 border-t border-[#F7EEEE] flex items-center justify-between gap-2 text-xs text-[#6A4B4E]">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="truncate">{deliveryLabel}</span>
-            {reviewCount > 0 && typeof ratingAvg === 'number' && (
-              <>
-                <span aria-hidden="true" className="text-[#D8BEBE]">·</span>
-                <span className="inline-flex items-center gap-1 font-mono-tabular font-semibold text-[#7A2229] shrink-0">
-                  <Star className="w-3.5 h-3.5 fill-[#7A2229] text-[#7A2229]" />
-                  <span>{ratingAvg.toFixed(1)}</span>
-                  <span className="text-[#927275] font-normal">({reviewCount})</span>
-                </span>
-              </>
-            )}
-          </div>
-          <span className="shrink-0 font-medium text-[#9A4D53]">
-            {totalStock > 0
-              ? optionsCount > 1
-                ? `${optionsCount} ${t.optionsCount}`
-                : t.inStock
-              : t.outOfStock}
-          </span>
-        </div>
-
-        {/* Aligned Price & Action Baseline */}
-        <div className="mt-4 pt-2 flex items-end justify-between gap-3">
-          <div>
-            {comparePrice > effectivePrice && (
-              <div className="text-xs text-[#927275] line-through tabular-nums">
-                {formatMmk(comparePrice, lang)}
-              </div>
-            )}
-            <div className="font-mono-tabular text-lg font-semibold text-[#241113]">
-              {formatMmk(effectivePrice, lang)}
+        {/* Bottom-Aligned Metadata & Price Baseline */}
+        <div className="mt-auto pt-4">
+          <div className="pt-3 border-t border-[#202028] flex items-center justify-between gap-2 text-xs text-[#858594]">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="truncate">{deliveryLabel}</span>
+              {reviewCount > 0 && typeof ratingAvg === 'number' && (
+                <>
+                  <span aria-hidden="true" className="text-[#3C3C48]">·</span>
+                  <span className="inline-flex items-center gap-1 font-mono-tabular font-semibold text-white shrink-0">
+                    <Star className="w-3.5 h-3.5 fill-[#E50914] text-[#E50914]" />
+                    <span>{ratingAvg.toFixed(1)}</span>
+                    <span className="text-[#858594] font-normal">({reviewCount})</span>
+                  </span>
+                </>
+              )}
             </div>
+            <span className="shrink-0 font-medium text-[#D4D4DE]">
+              {totalStock > 0
+                ? optionsCount > 1
+                  ? `${optionsCount} ${t.optionsCount}`
+                  : t.inStock
+                : t.outOfStock}
+            </span>
           </div>
 
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(product);
-            }}
-            className="px-3.5 py-2 rounded-xl bg-[#FCF8F8] border border-[#D8BEBE] text-xs font-medium text-[#6B1D24] group-hover:bg-[#6B1D24] group-hover:text-white group-hover:border-[#6B1D24] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
-          >
-            <span>{t.selectPlan}</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
+          <div className="mt-4 pt-1 flex items-end justify-between gap-3">
+            <div>
+              {comparePrice > effectivePrice && (
+                <div className="text-xs text-[#858594] line-through tabular-nums">
+                  {formatMmk(comparePrice, lang)}
+                </div>
+              )}
+              <div className="font-mono-tabular text-lg font-bold text-white">
+                {formatMmk(effectivePrice, lang)}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(product);
+              }}
+              className="px-3.5 py-2 rounded-xl bg-[#180C0E] border border-[#471B20] text-xs font-semibold text-white group-hover:bg-[#E50914] group-hover:border-[#E50914] transition-colors inline-flex items-center gap-1.5 whitespace-nowrap shrink-0 cursor-pointer"
+            >
+              <span>{t.selectPlan}</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
     </article>

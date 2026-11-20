@@ -13,15 +13,16 @@ const CONTENT_W = CANVAS_W - MARGIN * 2;
 
 const COLORS = {
   white: '#FFFFFF',
-  alabaster: '#FCF8F8',
-  champagne: '#F7EEEE',
-  border: '#EBDADA',
-  bronzeBorder: '#D8BEBE',
-  ink: '#241113',
-  secondary: '#6A4B4E',
-  muted: '#927275',
-  espresso: '#6B1D24',
-  titanium: '#9A4D53',
+  alabaster: '#F8F8FA',
+  champagne: '#F1F1F5',
+  border: '#E2E2E8',
+  bronzeBorder: '#D0D0DA',
+  ink: '#0B0B0F',
+  secondary: '#4B4B58',
+  muted: '#787886',
+  espresso: '#0B0B0F',
+  crimson: '#E50914',
+  titanium: '#C40812',
   green: '#15803D',
   greenBg: '#F0FDF4',
   greenBorder: '#BBF7D0',
@@ -225,15 +226,16 @@ export async function downloadOrderInvoicePdf(
     return 76;
   };
 
-  // Top Header Banner (Deep Maroon)
+  // Top Header Banner (Obsidian Black with Crimson Red Accent Stripe)
   drawRoundedRect(ctx, MARGIN, 64, CONTENT_W, 136, 20, COLORS.espresso);
+  drawRoundedRect(ctx, MARGIN, 192, CONTENT_W, 8, 4, COLORS.crimson);
 
   ctx.fillStyle = COLORS.white;
   ctx.font = `700 34px ${FONT_SANS}`;
   ctx.textAlign = 'left';
   ctx.fillText(storeName, MARGIN + 36, 94);
 
-  ctx.fillStyle = '#F7EEEE';
+  ctx.fillStyle = '#D4D4DE';
   ctx.font = `500 20px ${FONT_SANS}`;
   ctx.fillText(
     isMm ? 'တရားဝင် ငွေပေးချေမှု ပြေစာနှင့် အော်ဒါမှတ်တမ်း' : 'OFFICIAL ORDER INVOICE & RECEIPT SUMMARY',
@@ -442,7 +444,7 @@ export async function downloadOrderInvoicePdf(
   ctx.lineTo(totalsX + totalsW - 24, ty - 6);
   ctx.stroke();
 
-  ctx.fillStyle = COLORS.espresso;
+  ctx.fillStyle = COLORS.crimson;
   ctx.font = `700 23px ${FONT_SANS}`;
   ctx.fillText(isMm ? 'ပေးချေပြီး စုစုပေါင်း' : 'Total Paid', totalsX + 24, ty + 8);
   ctx.textAlign = 'right';
@@ -540,11 +542,12 @@ export async function downloadCompletedOrdersSummaryPdf(
 
   // Header Banner
   drawRoundedRect(ctx, MARGIN, 64, CONTENT_W, 130, 20, COLORS.espresso);
+  drawRoundedRect(ctx, MARGIN, 186, CONTENT_W, 8, 4, COLORS.crimson);
   ctx.fillStyle = COLORS.white;
   ctx.font = `700 32px ${FONT_SANS}`;
   ctx.fillText(storeName, MARGIN + 34, 92);
 
-  ctx.fillStyle = '#F7EEEE';
+  ctx.fillStyle = '#D4D4DE';
   ctx.font = `500 20px ${FONT_SANS}`;
   ctx.fillText(
     isMm ? 'အတည်ပြုပြီး အော်ဒါမှတ်တမ်း အနှစ်ချုပ် (PDF)' : 'COMPLETED ORDERS SUMMARY STATEMENT',
@@ -561,7 +564,7 @@ export async function downloadCompletedOrdersSummaryPdf(
     98
   );
   if (customerLabel) {
-    ctx.fillStyle = '#F7EEEE';
+    ctx.fillStyle = '#D4D4DE';
     ctx.font = `400 18px ${FONT_SANS}`;
     ctx.fillText(customerLabel, CANVAS_W - MARGIN - 34, 138);
   }
@@ -585,7 +588,7 @@ export async function downloadCompletedOrdersSummaryPdf(
     {
       label: isMm ? 'စုစုပေါင်း ပေးချေပြီးငွေ' : 'Total Verified Spent',
       value: formatMmk(totalSpent, lang),
-      color: COLORS.espresso,
+      color: COLORS.crimson,
     },
   ];
 
@@ -657,7 +660,7 @@ export async function downloadCompletedOrdersSummaryPdf(
 
     // Total
     ctx.textAlign = 'right';
-    ctx.fillStyle = COLORS.espresso;
+    ctx.fillStyle = COLORS.crimson;
     ctx.font = `700 19px ${FONT_MONO}`;
     ctx.fillText(formatMmk(order.totalMmk, lang), CANVAS_W - MARGIN - 20, y + 14);
     ctx.textAlign = 'left';
